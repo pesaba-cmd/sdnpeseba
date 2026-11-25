@@ -1,0 +1,3241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>Portal Resmi Sekolah Modern</title>
+  <meta name="theme-color" content="#1E3A8A" />
+  <meta name="description" content="Website Resmi Sekolah Modern - Informasi Akademik, Profil Guru & Tendik, Berita, dan Layanan Aplikasi Terpadu." />
+
+  <!-- PWA Manifest via Data URI (Arsitektur 1 File Tunggal) -->
+  <link rel="manifest" href='data:application/manifest+json,{"name":"Portal Sekolah Modern","short_name":"SekolahApp","start_url":".","display":"standalone","background_color":"#F8FAFC","theme_color":"#1E3A8A","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2724%27 fill=%27%231E3A8A%27/%3E%3Cpath d=%27M50 22L18 38l32 16 32-16-32-16zm-20 24v16c0 8 9 14 20 14s20-6 20-14V46L50 56 30 46z%27 fill=%27%23ffffff%27/%3E%3C/svg%3E","sizes":"192x192","type":"image/svg+xml"}]}' />
+
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            sapphire: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Lucide Icons via CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Full-Page Overlay menutupi elemen bawaan Blogger tanpa edit XML */
+    #school-webapp-root {
+      position: fixed;
+      inset: 0;
+      z-index: 999999;
+      background-color: #F8FAFC;
+      color: #334155;
+      font-family: 'Inter', sans-serif;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #school-webapp-root h1,
+    #school-webapp-root h2,
+    #school-webapp-root h3,
+    #school-webapp-root h4,
+    #school-webapp-root .font-heading {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* Efek Kaca Transparan (Glassmorphism) */
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(226, 232, 240, 0.85);
+      box-shadow: 0 8px 30px rgba(15, 23, 42, 0.04);
+    }
+
+    .glass-dropdown {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.12);
+    }
+
+    .glass-bottom-bar {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-top: 1px solid rgba(226, 232, 240, 0.9);
+      box-shadow: 0 -8px 25px rgba(15, 23, 42, 0.06);
+    }
+
+    /* Custom Scrollbar */
+    #school-webapp-root::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    #school-webapp-root::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    #school-webapp-root::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+    #school-webapp-root::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+
+    /* Animasi Transisi Slide */
+    .slide-fade {
+      animation: slideFadeIn 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes slideFadeIn {
+      from {
+        opacity: 0.4;
+        transform: scale(1.015);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* Sembunyikan scrollbar pada filter horizontal */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Root Container Fullscreen -->
+  <div id="school-webapp-root">
+    <!-- Banner Mode Preview (Otomatis hilang 100% saat IS_PREVIEW = false) -->
+    <div id="preview-banner" class="hidden bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white text-xs sm:text-sm py-2 px-4 shadow-sm relative z-50">
+      <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2 font-medium">
+          <i data-lucide="flask-conical" class="w-4 h-4 shrink-0"></i>
+          <span><strong>Mode Preview Aktif:</strong> Menggunakan memori lokal browser. Ubah <code>IS_PREVIEW = false</code> saat deploy ke Supabase.</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="window.appActions.quickLoginAdmin()" class="bg-white/20 hover:bg-white/30 text-white px-2.5 py-1 rounded-lg text-xs font-semibold transition">
+            Pintasan Admin
+          </button>
+          <button onclick="window.appActions.quickLoginStaff()" class="bg-white/20 hover:bg-white/30 text-white px-2.5 py-1 rounded-lg text-xs font-semibold transition">
+            Pintasan Guru/Tendik
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP NAVIGATION BAR (Modern Desktop, Tablet & Compact Mobile Header) -->
+    <header class="glass-nav sticky top-0 z-40 transition-all duration-300">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 md:h-20 gap-3">
+          <!-- Brand: Logo & Nama Sekolah -->
+          <button onclick="window.appActions.navigate('beranda')" class="flex items-center gap-3 text-left group focus:outline-none min-w-0">
+            <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-white shadow-sm border border-slate-200/80 flex items-center justify-center overflow-hidden shrink-0 group-hover:scale-105 transition-transform">
+              <img id="nav-school-logo" src="" alt="Logo Sekolah" class="w-full h-full object-contain p-1" />
+            </div>
+            <div class="min-w-0">
+              <span id="nav-school-name" class="font-heading font-bold text-slate-900 text-sm sm:text-base md:text-lg block truncate leading-tight">
+                SMA Negeri 1 Nusantara
+              </span>
+              <span id="nav-school-tagline" class="text-[11px] sm:text-xs text-slate-500 block truncate">
+                Unggul, Berkarakter & Berwawasan Global
+              </span>
+            </div>
+          </button>
+
+          <!-- Desktop & Tablet Top Menu (>= md / 768px) -->
+          <nav class="hidden md:flex items-center gap-1 lg:gap-2" aria-label="Menu Utama">
+            <button data-nav="beranda" onclick="window.appActions.navigate('beranda')" class="nav-item px-3.5 py-2 rounded-xl text-sm font-medium transition-all">
+              Beranda
+            </button>
+            <button data-nav="profil" onclick="window.appActions.navigate('profil')" class="nav-item px-3.5 py-2 rounded-xl text-sm font-medium transition-all">
+              Profil Sekolah
+            </button>
+            <button data-nav="berita" onclick="window.appActions.navigate('berita')" class="nav-item px-3.5 py-2 rounded-xl text-sm font-medium transition-all">
+              Berita & Prestasi
+            </button>
+
+            <!-- Dropdown Menu Aplikasi -->
+            <div class="relative" id="desktop-apps-dropdown-wrapper">
+              <button
+                id="desktop-apps-btn"
+                onclick="window.appActions.toggleAppsDropdown(event)"
+                data-nav="aplikasi"
+                class="nav-item px-3.5 py-2 rounded-xl text-sm font-medium transition-all inline-flex items-center gap-1.5"
+              >
+                <span>Aplikasi</span>
+                <i data-lucide="chevron-down" id="desktop-apps-chevron" class="w-4 h-4 transition-transform duration-200"></i>
+              </button>
+
+              <!-- Dropdown List Panel -->
+              <div
+                id="desktop-apps-menu"
+                class="hidden glass-dropdown absolute right-0 lg:left-0 mt-2.5 w-80 rounded-2xl p-2 z-50 origin-top transition-all"
+              >
+                <div class="px-3 py-2 border-b border-slate-100 mb-1 flex items-center justify-between">
+                  <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Layanan Aplikasi Sekolah</span>
+                  <span id="apps-count-badge" class="text-[11px] bg-blue-50 text-blue-700 font-semibold px-2 py-0.5 rounded-full">0 App</span>
+                </div>
+                <div id="desktop-apps-list" class="max-h-72 overflow-y-auto space-y-1">
+                  <!-- Diisi dinamis oleh JS -->
+                </div>
+              </div>
+            </div>
+
+            <button data-nav="portal" onclick="window.appActions.navigate('portal')" class="nav-item px-3.5 py-2 rounded-xl text-sm font-medium transition-all">
+              Portal Warga
+            </button>
+          </nav>
+
+          <!-- Area Tombol Login / Akun Aktif -->
+          <div class="flex items-center gap-2 shrink-0">
+            <div id="nav-auth-area">
+              <!-- Diisi dinamis oleh JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main id="main-view-container" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-28 md:pb-16 min-h-[calc(100vh-140px)]">
+      <!-- Konten Halaman Dinamis akan dirender di sini -->
+    </main>
+
+    <!-- FOOTER (Desktop & Tablet) -->
+    <footer class="bg-white border-t border-slate-200/80 pb-24 md:pb-10 pt-10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-slate-100">
+          <div>
+            <div class="flex items-center gap-3 mb-3">
+              <img id="footer-school-logo" src="" alt="Logo" class="w-9 h-9 object-contain rounded-xl border border-slate-200 p-1" />
+              <h4 id="footer-school-name" class="font-bold text-slate-900 text-base">SMA Negeri 1 Nusantara</h4>
+            </div>
+            <p id="footer-school-tagline" class="text-sm text-slate-500 leading-relaxed">
+              Mewujudkan generasi cerdas, berakhlak mulia, dan adaptif terhadap perkembangan teknologi.
+            </p>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-sm uppercase tracking-wider mb-3">Navigasi Cepat</h4>
+            <ul class="space-y-2 text-sm text-slate-600">
+              <li><button onclick="window.appActions.navigate('beranda')" class="hover:text-blue-700 transition">Beranda & Sambutan KS</button></li>
+              <li><button onclick="window.appActions.navigate('profil')" class="hover:text-blue-700 transition">Profil, Visi Misi & Guru/Tendik</button></li>
+              <li><button onclick="window.appActions.navigate('berita')" class="hover:text-blue-700 transition">Berita & Prestasi Sekolah</button></li>
+              <li><button onclick="window.appActions.navigate('portal')" class="hover:text-blue-700 transition">Portal Warga Sekolah</button></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-sm uppercase tracking-wider mb-3">Kontak & Alamat</h4>
+            <ul class="space-y-2 text-sm text-slate-600">
+              <li class="flex items-start gap-2">
+                <i data-lucide="map-pin" class="w-4 h-4 text-blue-700 shrink-0 mt-0.5"></i>
+                <span id="footer-school-address">Jl. Pendidikan No. 1</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <i data-lucide="phone" class="w-4 h-4 text-blue-700 shrink-0"></i>
+                <span id="footer-school-phone">(021) 555-0199</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <i data-lucide="mail" class="w-4 h-4 text-blue-700 shrink-0"></i>
+                <span id="footer-school-email">info@sekolah.sch.id</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+          <p>&copy; <span id="footer-year">2026</span> <span id="footer-copy-name">Sekolah Modern</span>. Hak Cipta Dilindungi.</p>
+          <p>Sistem Informasi Sekolah Terpadu • Responsif Mobile & Tablet</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- MOBILE FLOATING BOTTOM NAVIGATION BAR (< 768px) -->
+    <nav class="md:hidden fixed bottom-3 left-3 right-3 z-40 glass-bottom-bar rounded-2xl px-2 py-1.5" aria-label="Navigasi Mobile">
+      <div class="grid grid-cols-5 gap-1">
+        <button data-mnav="beranda" onclick="window.appActions.navigate('beranda')" class="mnav-item flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-medium transition">
+          <i data-lucide="home" class="w-5 h-5 mb-0.5"></i>
+          <span>Beranda</span>
+        </button>
+        <button data-mnav="profil" onclick="window.appActions.navigate('profil')" class="mnav-item flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-medium transition">
+          <i data-lucide="school" class="w-5 h-5 mb-0.5"></i>
+          <span>Profil</span>
+        </button>
+        <button data-mnav="aplikasi" onclick="window.appActions.openMobileAppsSheet()" class="mnav-item flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-medium transition">
+          <i data-lucide="layout-grid" class="w-5 h-5 mb-0.5"></i>
+          <span>Aplikasi</span>
+        </button>
+        <button data-mnav="berita" onclick="window.appActions.navigate('berita')" class="mnav-item flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-medium transition">
+          <i data-lucide="newspaper" class="w-5 h-5 mb-0.5"></i>
+          <span>Berita</span>
+        </button>
+        <button data-mnav="portal" onclick="window.appActions.navigate('portal')" class="mnav-item flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-medium transition">
+          <i data-lucide="user-circle" class="w-5 h-5 mb-0.5"></i>
+          <span id="mnav-portal-label">Portal</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- MOBILE APPS BOTTOM SHEET MODAL (Dropdown List Versi Mobile) -->
+    <div id="mobile-apps-sheet" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-end md:items-center justify-center p-0 md:p-4">
+      <div class="bg-white w-full md:max-w-md rounded-t-3xl md:rounded-3xl p-5 shadow-2xl border border-slate-100 max-h-[80vh] flex flex-col">
+        <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4 md:hidden"></div>
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div>
+            <h3 class="font-bold text-slate-900 text-lg">Daftar Aplikasi Sekolah</h3>
+            <p class="text-xs text-slate-500">Pilih aplikasi untuk dibuka langsung di tab baru</p>
+          </div>
+          <button onclick="window.appActions.closeMobileAppsSheet()" class="p-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+        <div id="mobile-apps-list" class="py-3 overflow-y-auto space-y-2">
+          <!-- Diisi dinamis oleh JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL LOGIN HYBRID (Admin Supabase Auth & Warga Sekolah Tabel DB) -->
+    <div id="login-modal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white w-full max-w-md rounded-3xl p-6 sm:p-7 shadow-2xl border border-slate-100 relative">
+        <button onclick="window.appActions.closeLoginModal()" class="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <div class="text-center mb-6">
+          <div class="w-12 h-12 rounded-2xl bg-blue-900 text-white flex items-center justify-center mx-auto mb-3 shadow-md">
+            <i data-lucide="shield-check" class="w-6 h-6"></i>
+          </div>
+          <h3 class="font-bold text-xl text-slate-900">Masuk Sistem Sekolah</h3>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">Pilih peran akses Anda di bawah ini</p>
+        </div>
+
+        <!-- Tab Switcher Login Role -->
+        <div class="grid grid-cols-2 gap-1.5 p-1 bg-slate-100 rounded-2xl mb-5">
+          <button id="tab-login-warga" onclick="window.appActions.switchLoginTab('warga')" class="py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold bg-white text-blue-900 shadow-sm transition">
+            Guru / Tendik / Siswa
+          </button>
+          <button id="tab-login-admin" onclick="window.appActions.switchLoginTab('admin')" class="py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition">
+            Administrator
+          </button>
+        </div>
+
+        <!-- Form Login Warga Sekolah (Validasi Tabel portal_users) -->
+        <form id="form-login-warga" onsubmit="window.appActions.handleWargaLogin(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1.5">Username / NIP / NISN</label>
+            <input type="text" id="warga-username" required placeholder="Masukkan username atau NIP/NISN" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1.5">Kata Sandi</label>
+            <input type="password" id="warga-password" required placeholder="••••••••" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none text-sm" />
+          </div>
+          <button type="submit" id="btn-submit-warga" class="w-full py-3 rounded-xl bg-blue-900 hover:bg-blue-800 text-white font-semibold text-sm shadow-md transition flex items-center justify-center gap-2">
+            <i data-lucide="log-in" class="w-4 h-4"></i>
+            <span>Masuk Portal Warga</span>
+          </button>
+        </form>
+
+        <!-- Form Login Admin (Supabase Auth) -->
+        <form id="form-login-admin" onsubmit="window.appActions.handleAdminLogin(event)" class="hidden space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1.5">Email Administrator</label>
+            <input type="email" id="admin-email" required placeholder="admin@sekolah.sch.id" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1.5">Kata Sandi Admin</label>
+            <input type="password" id="admin-password" required placeholder="••••••••" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none text-sm" />
+          </div>
+          <button type="submit" id="btn-submit-admin" class="w-full py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm shadow-md transition flex items-center justify-center gap-2">
+            <i data-lucide="key-round" class="w-4 h-4"></i>
+            <span>Masuk Panel Admin</span>
+          </button>
+        </form>
+
+        <!-- Quick Login Preview Only (Otomatis hilang jika IS_PREVIEW = false) -->
+        <div id="modal-preview-quicklogin" class="hidden mt-5 pt-4 border-t border-dashed border-amber-300 bg-amber-50/70 rounded-2xl p-3">
+          <p class="text-[11px] font-semibold text-amber-800 mb-2 flex items-center gap-1.5">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Uji Cepat Mode Preview:
+          </p>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" onclick="window.appActions.quickLoginStaff()" class="py-1.5 px-2.5 rounded-lg bg-white border border-amber-200 text-amber-900 text-xs font-semibold hover:bg-amber-100 transition">
+              Login Guru (Unggah Foto)
+            </button>
+            <button type="button" onclick="window.appActions.quickLoginAdmin()" class="py-1.5 px-2.5 rounded-lg bg-amber-600 text-white text-xs font-semibold hover:bg-amber-700 transition">
+              Login Admin Sekolah
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CUSTOM CONFIRMATION MODAL (Pengganti confirm() bawaan browser) -->
+    <div id="confirm-modal" class="hidden fixed inset-0 z-[60] bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl border border-slate-100 text-center">
+        <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-3">
+          <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+        </div>
+        <h4 id="confirm-title" class="font-bold text-lg text-slate-900">Konfirmasi Hapus</h4>
+        <p id="confirm-message" class="text-sm text-slate-600 mt-1 mb-5">Apakah Anda yakin ingin menghapus data ini?</p>
+        <div class="grid grid-cols-2 gap-2.5">
+          <button id="confirm-cancel-btn" class="py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition">
+            Batal
+          </button>
+          <button id="confirm-ok-btn" class="py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-sm transition">
+            Ya, Hapus
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ARTICLE DETAIL MODAL -->
+    <div id="news-detail-modal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl border border-slate-100 max-h-[90vh] flex flex-col">
+        <div class="relative h-56 sm:h-72 bg-slate-900 shrink-0 group">
+          <img id="news-modal-img" src="" alt="Foto Berita" class="w-full h-full object-cover transition-all duration-300" />
+          <button onclick="window.appActions.closeNewsModal()" class="absolute top-4 right-4 p-2 rounded-full bg-white/90 text-slate-800 hover:bg-white shadow-md z-10">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+          <button id="news-modal-prev" onclick="window.appActions.prevNewsModalImage()" class="hidden absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/45 hover:bg-black/65 text-white backdrop-blur-sm transition">
+            <i data-lucide="chevron-left" class="w-5 h-5"></i>
+          </button>
+          <button id="news-modal-next" onclick="window.appActions.nextNewsModalImage()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/45 hover:bg-black/65 text-white backdrop-blur-sm transition">
+            <i data-lucide="chevron-right" class="w-5 h-5"></i>
+          </button>
+          <span id="news-modal-cat" class="absolute bottom-4 left-5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-900 text-white shadow">
+            Berita
+          </span>
+          <span id="news-modal-img-counter" class="hidden absolute bottom-4 right-5 px-2.5 py-1 rounded-full text-xs font-semibold bg-black/60 text-white backdrop-blur-sm">
+            1 / 1
+          </span>
+        </div>
+        <div id="news-modal-thumbs" class="hidden px-6 pt-3 pb-1 flex items-center gap-2 overflow-x-auto no-scrollbar bg-slate-50/80 border-b border-slate-100 shrink-0"></div>
+        <div class="p-6 overflow-y-auto space-y-4">
+          <div>
+            <p id="news-modal-date" class="text-xs text-slate-400 mb-1.5"></p>
+            <h3 id="news-modal-title" class="font-bold text-xl sm:text-2xl text-slate-900 leading-snug"></h3>
+          </div>
+          <div id="news-modal-content" class="text-sm sm:text-base text-slate-700 leading-relaxed whitespace-pre-line"></div>
+          <div id="news-modal-share" class="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="fixed top-20 right-4 z-[70] flex flex-col gap-2 max-w-xs sm:max-w-sm pointer-events-none"></div>
+  </div>
+
+  <!-- MODULE SCRIPT: LOGIKA APLIKASI, PWA SERVICE WORKER & SUPABASE -->
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    // =========================================================================
+    // KONFIGURASI DEPLOYMENT SUPABASE
+    // Ubah IS_PREVIEW menjadi false saat siap dipublikasikan ke produksi
+    // =========================================================================
+    const IS_PREVIEW = true;
+    const SUPABASE_URL = "URL_SUPABASE_ANDA";
+    const SUPABASE_ANON_KEY = "ANON_KEY_ANDA";
+
+    // Inisialisasi Client Supabase hanya saat IS_PREVIEW === false
+    const supabase = !IS_PREVIEW ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+    // =========================================================================
+    // PENDAFTARAN SERVICE WORKER PWA SECARA DINAMIS (BLOB)
+    // =========================================================================
+    if ('serviceWorker' in navigator) {
+      const swCode = `
+        const CACHE_NAME = 'sekolah-modern-pwa-v1';
+        self.addEventListener('install', (event) => {
+          self.skipWaiting();
+        });
+        self.addEventListener('activate', (event) => {
+          event.waitUntil(clients.claim());
+        });
+        self.addEventListener('fetch', (event) => {
+          if (event.request.method !== 'GET') return;
+          event.respondWith(
+            fetch(event.request).catch(() => caches.match(event.request))
+          );
+        });
+      `;
+      const swBlob = new Blob([swCode], { type: 'application/javascript' });
+      const swUrl = URL.createObjectURL(swBlob);
+      navigator.serviceWorker.register(swUrl).catch(() => {
+        // Abaikan jika diblokir oleh kebijakan sandbox iframe tertentu
+      });
+    }
+
+    // =========================================================================
+    // HELPER SVG DEFAULT & KOMPRESI GAMBAR OTOMATIS
+    // =========================================================================
+    const DEFAULT_LOGO_SVG = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%231E3A8A'/%3E%3Cstop offset='100%25' stop-color='%233B82F6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='120' height='120' rx='28' fill='url(%23g)'/%3E%3Cpath d='M60 26L22 45l38 19 38-19-38-19zm-24 28v20c0 10 11 17 24 17s24-7 24-17V54L60 66 36 54z' fill='%23ffffff'/%3E%3Ccircle cx='92' cy='45' r='4' fill='%23FBBF24'/%3E%3Cpath d='M92 49v16' stroke='%23FBBF24' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E`;
+
+    const DEFAULT_AVATAR_SVG = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%23E2E8F0'/%3E%3Ccircle cx='60' cy='46' r='22' fill='%2394A3B8'/%3E%3Cpath d='M24 108c0-20 16-34 36-34s36 14 36 34' fill='%2394A3B8'/%3E%3C/svg%3E`;
+
+    function generateBannerSvg(title, c1, c2) {
+      return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 600'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='${encodeURIComponent(c1)}'/%3E%3Cstop offset='100%25' stop-color='${encodeURIComponent(c2)}'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='600' fill='url(%23bg)'/%3E%3Ccircle cx='1050' cy='120' r='220' fill='%23ffffff' fill-opacity='0.06'/%3E%3Ccircle cx='180' cy='520' r='280' fill='%23ffffff' fill-opacity='0.05'/%3E%3Ctext x='80' y='520' font-family='sans-serif' font-size='28' fill='%23ffffff' fill-opacity='0.22' font-weight='bold'%3E${encodeURIComponent(title)}%3C/text%3E%3C/svg%3E`;
+    }
+
+    // Mengompres gambar yang diunggah dari HP/Komputer agar ringan disimpan di Supabase
+    function compressImageFile(file, maxWidth = 600, quality = 0.78) {
+      return new Promise((resolve, reject) => {
+        if (!file || !file.type.startsWith('image/')) {
+          reject(new Error('File yang dipilih harus berupa gambar (JPG/PNG/WebP).'));
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+          img.onerror = () => reject(new Error('Gagal memproses file gambar.'));
+          img.src = e.target.result;
+        };
+        reader.onerror = () => reject(new Error('Gagal membaca file dari perangkat.'));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // =========================================================================
+    // DATA DUMMY MINIMALIS (HANYA AKTIF JIKA IS_PREVIEW === true)
+    // =========================================================================
+    const PREVIEW_DATA = IS_PREVIEW ? {
+      profile: {
+        id: 1,
+        school_name: "SMA Negeri 1 Nusantara",
+        tagline: "Unggul dalam Prestasi, Luhur dalam Budi Pekerti, Adaptif Teknologi",
+        logo_url: DEFAULT_LOGO_SVG,
+        vision: "Terwujudnya insan akademis yang beriman, bertaqwa, cerdas, kompetitif secara global, serta berwawasan lingkungan pada tahun 2030.",
+        mission: "1. Menyelenggarakan pembelajaran berbasis teknologi digital dan riset.\n2. Mengembangkan karakter peserta didik yang berintegritas dan berbudaya.\n3. Meningkatkan kompetensi profesionalisme Guru dan Tenaga Kependidikan.",
+        address: "Jl. Merdeka Pendidikan No. 45, Kota Nusantara",
+        phone: "(021) 7890-1234",
+        email: "info@sman1nusantara.sch.id",
+        principal_name: "Dr. H. Ahmad Fauzan, M.Pd.",
+        principal_photo_url: DEFAULT_AVATAR_SVG,
+        principal_greeting: "Assalamu'alaikum Warahmatullahi Wabarakatuh.\n\nSelamat datang di Portal Resmi SMA Negeri 1 Nusantara. Kehadiran website modern ini merupakan wujud komitmen kami dalam menghadirkan keterbukaan informasi, kemudahan layanan digital bagi siswa, guru, orang tua, serta masyarakat luas.\n\nMari bersama-sama bersinergi mencetak generasi masa depan yang unggul secara intelektual dan matang secara spiritual."
+      },
+      slides: [
+        {
+          id: "s1",
+          title: "Selamat Datang di Kampus Digital Masa Depan",
+          subtitle: "Lingkungan belajar modern yang mendukung kreativitas, literasi digital, dan kolaborasi siswa.",
+          image_url: generateBannerSvg("KAMPUS DIGITAL", "#1E3A8A", "#2563EB"),
+          cta_text: "Jelajahi Profil",
+          sort_order: 1,
+          is_active: true
+        },
+        {
+          id: "s2",
+          title: "Penerimaan Peserta Didik Baru (PPDB) Telah Dibuka",
+          subtitle: "Bergabunglah bersama ekosistem pendidikan unggul dengan fasilitas laboratorium lengkap.",
+          image_url: generateBannerSvg("PPDB ONLINE", "#0F172A", "#1D4ED8"),
+          cta_text: "Buka Aplikasi",
+          sort_order: 2,
+          is_active: true
+        },
+        {
+          id: "s3",
+          title: "Raih Medali Emas Olimpiade Sains Nasional",
+          subtitle: "Dedikasi pembinaan intensif oleh tim pengajar profesional membuahkan prestasi membanggakan.",
+          image_url: generateBannerSvg("PRESTASI NASIONAL", "#1E40AF", "#0284C7"),
+          cta_text: "Lihat Berita",
+          sort_order: 3,
+          is_active: true
+        },
+        {
+          id: "s4",
+          title: "Sinergi Guru & Tenaga Kependidikan Profesional",
+          subtitle: "Pelayanan akademik dan administrasi sekolah yang ramah, cepat, dan transparan.",
+          image_url: generateBannerSvg("GURU & TENDIK", "#1E3A8A", "#4338CA"),
+          cta_text: "Direktori Guru",
+          sort_order: 4,
+          is_active: true
+        }
+      ],
+      staff: [
+        {
+          id: "st1",
+          full_name: "Siti Rahmawati, S.Pd., M.Si.",
+          role_type: "Guru",
+          position_subject: "Guru Matematika & Pembina OSN",
+          nip: "19850412 201001 2 014",
+          photo_url: DEFAULT_AVATAR_SVG,
+          sort_order: 1
+        },
+        {
+          id: "st2",
+          full_name: "Budi Santoso, S.Kom.",
+          role_type: "Tendik",
+          position_subject: "Kepala Tata Usaha & Operator Dapodik",
+          nip: "19900821 201503 1 006",
+          photo_url: DEFAULT_AVATAR_SVG,
+          sort_order: 2
+        }
+      ],
+      apps: [
+        {
+          id: "app1",
+          app_name: "Perpustakaan Digital & Katalog",
+          description: "Akses koleksi e-book, jurnal ilmiah, dan referensi belajar siswa.",
+          embed_url: "https://id.wikipedia.org/wiki/Pendidikan_di_Indonesia",
+          icon_name: "book-open",
+          sort_order: 1,
+          is_active: true
+        },
+        {
+          id: "app2",
+          app_name: "Portal Informasi Pendidikan",
+          description: "Layanan informasi kalender akademik dan literasi digital sekolah.",
+          embed_url: "https://id.wikipedia.org/wiki/Teknologi_pendidikan",
+          icon_name: "monitor",
+          sort_order: 2,
+          is_active: true
+        }
+      ],
+      news: [
+        {
+          id: "n1",
+          title: "Peluncuran Portal Akademik & Direktori Guru Terpadu",
+          category: "Pengumuman",
+          content: "Sekolah resmi meluncurkan sistem informasi berbasis web modern yang dapat diakses dengan nyaman melalui smartphone, tablet, maupun komputer. Guru dan Tenaga Kependidikan kini dapat memperbarui foto profil secara mandiri melalui Portal Warga.",
+          image_url: generateBannerSvg("PORTAL AKADEMIK", "#1E3A8A", "#3B82F6"),
+          images: [
+            generateBannerSvg("PORTAL AKADEMIK", "#1E3A8A", "#3B82F6"),
+            generateBannerSvg("DIREKTORI GURU", "#0F172A", "#2563EB")
+          ],
+          published_at: new Date().toISOString()
+        },
+        {
+          id: "n2",
+          title: "Juara 1 Lomba Karya Ilmiah Remaja Tingkat Provinsi",
+          category: "Prestasi",
+          content: "Tim riset siswa berhasil meraih juara pertama melalui inovasi pemanfaatan energi terbarukan berbasis Internet of Things (IoT) yang ramah lingkungan.",
+          image_url: generateBannerSvg("JUARA 1 KIR", "#0F766E", "#0284C7"),
+          images: [
+            generateBannerSvg("JUARA 1 KIR", "#0F766E", "#0284C7")
+          ],
+          published_at: new Date(Date.now() - 86400000).toISOString()
+        }
+      ],
+      portalUsers: [
+        {
+          id: "u1",
+          username: "guru01",
+          password: "123",
+          full_name: "Siti Rahmawati, S.Pd., M.Si.",
+          role: "Guru",
+          class_info: "Matematika",
+          staff_id: "st1"
+        },
+        {
+          id: "u2",
+          username: "siswa01",
+          password: "123",
+          full_name: "Rizky Pratama",
+          role: "Siswa",
+          class_info: "XII IPA 1",
+          staff_id: null
+        }
+      ],
+      messages: [
+        {
+          id: "m1",
+          user_id: "u2",
+          sender_name: "Rizky Pratama (XII IPA 1)",
+          subject: "Usulan Penambahan Jam Lab Komputer",
+          message: "Mohon izin mengusulkan pembukaan akses laboratorium komputer pada sore hari untuk latihan tim ekstrakurikuler pemrograman.",
+          created_at: new Date().toISOString()
+        }
+      ]
+    } : null;
+
+    // =========================================================================
+    // STATE UTAMA APLIKASI
+    // =========================================================================
+    const state = {
+      currentRoute: 'beranda', // 'beranda' | 'profil' | 'berita' | 'aplikasi' | 'portal' | 'admin'
+      activeAppId: null,
+      activeSlideIndex: 0,
+      slideInterval: null,
+      touchStartX: 0,
+      staffFilter: 'Semua', // 'Semua' | 'Guru' | 'Tendik'
+      staffSearch: '',
+      newsFilter: 'Semua',
+      newsDraftImages: [],
+      activeNewsModalId: null,
+      activeNewsModalImages: [],
+      activeNewsModalImgIdx: 0,
+      adminTab: 'profil', // 'profil' | 'sambutan' | 'slider' | 'staff' | 'apps' | 'berita' | 'users'
+      currentUser: null, // { type: 'admin' | 'warga', data: {...} }
+      isLoading: true,
+
+      // Data Aplikasi (Diisi dari PREVIEW_DATA saat preview, atau Supabase saat produksi)
+      profile: IS_PREVIEW ? { ...PREVIEW_DATA.profile } : {
+        id: 1,
+        school_name: "Nama Sekolah Belum Diatur",
+        tagline: "Silakan login sebagai Admin untuk mengatur profil sekolah",
+        logo_url: DEFAULT_LOGO_SVG,
+        vision: "Belum ada data visi sekolah.",
+        mission: "Belum ada data misi sekolah.",
+        address: "-",
+        phone: "-",
+        email: "-",
+        principal_name: "Kepala Sekolah",
+        principal_photo_url: DEFAULT_AVATAR_SVG,
+        principal_greeting: "Belum ada teks sambutan Kepala Sekolah."
+      },
+      slides: IS_PREVIEW ? [...PREVIEW_DATA.slides] : [],
+      staff: IS_PREVIEW ? [...PREVIEW_DATA.staff] : [],
+      apps: IS_PREVIEW ? [...PREVIEW_DATA.apps] : [],
+      news: IS_PREVIEW ? [...PREVIEW_DATA.news] : [],
+      portalUsers: IS_PREVIEW ? [...PREVIEW_DATA.portalUsers] : [],
+      messages: IS_PREVIEW ? [...PREVIEW_DATA.messages] : []
+    };
+
+    // =========================================================================
+    // SISTEM NOTIFIKASI TOAST & CUSTOM CONFIRM
+    // =========================================================================
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      const colors = {
+        success: 'bg-emerald-900/95 text-white border-emerald-700',
+        error: 'bg-rose-900/95 text-white border-rose-700',
+        info: 'bg-slate-900/95 text-white border-slate-700'
+      };
+      const icons = {
+        success: 'check-circle-2',
+        error: 'alert-circle',
+        info: 'info'
+      };
+      toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-2xl border shadow-xl backdrop-blur-md text-xs sm:text-sm font-medium transition-all duration-300 transform translate-y-0 opacity-100 ${colors[type] || colors.info}`;
+      toast.innerHTML = `
+        <i data-lucide="${icons[type] || 'info'}" class="w-4 h-4 shrink-0"></i>
+        <span>${escapeHtml(message)}</span>
+      `;
+      container.appendChild(toast);
+      if (window.lucide) window.lucide.createIcons();
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-8px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3400);
+    }
+
+    function showConfirmDialog(title, message) {
+      return new Promise((resolve) => {
+        const modal = document.getElementById('confirm-modal');
+        document.getElementById('confirm-title').textContent = title;
+        document.getElementById('confirm-message').textContent = message;
+        modal.classList.remove('hidden');
+
+        const okBtn = document.getElementById('confirm-ok-btn');
+        const cancelBtn = document.getElementById('confirm-cancel-btn');
+
+        const cleanup = (result) => {
+          modal.classList.add('hidden');
+          okBtn.removeEventListener('click', onOk);
+          cancelBtn.removeEventListener('click', onCancel);
+          resolve(result);
+        };
+        const onOk = () => cleanup(true);
+        const onCancel = () => cleanup(false);
+
+        okBtn.addEventListener('click', onOk);
+        cancelBtn.addEventListener('click', onCancel);
+      });
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function formatDateIndo(isoString) {
+      if (!isoString) return '';
+      try {
+        return new Date(isoString).toLocaleDateString('id-ID', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        });
+      } catch {
+        return '';
+      }
+    }
+
+    // =========================================================================
+    // SINKRONISASI DATA SUPABASE (PRODUKSI: IS_PREVIEW === false)
+    // =========================================================================
+    async function loadAllDataFromSupabase() {
+      if (IS_PREVIEW) {
+        state.isLoading = false;
+        return;
+      }
+
+      state.isLoading = true;
+      renderCurrentView();
+
+      try {
+        // Cek Session Admin Supabase Auth yang masih aktif
+        const { data: sessionData } = await supabase.auth.getSession();
+        if (sessionData?.session?.user) {
+          state.currentUser = {
+            type: 'admin',
+            data: { email: sessionData.session.user.email, id: sessionData.session.user.id }
+          };
+        } else {
+          // Cek session warga sekolah dari sessionStorage
+          const savedWarga = sessionStorage.getItem('sekolah_warga_session');
+          if (savedWarga) {
+            state.currentUser = { type: 'warga', data: JSON.parse(savedWarga) };
+          }
+        }
+
+        // Ambil seluruh tabel secara paralel
+        const [
+          profileRes,
+          slidesRes,
+          staffRes,
+          appsRes,
+          newsRes,
+          messagesRes
+        ] = await Promise.all([
+          supabase.from('school_profile').select('*').eq('id', 1).maybeSingle(),
+          supabase.from('hero_slides').select('*').order('sort_order', { ascending: true }),
+          supabase.from('school_staff').select('*').order('sort_order', { ascending: true }),
+          supabase.from('school_apps').select('*').order('sort_order', { ascending: true }),
+          supabase.from('school_news').select('*').order('published_at', { ascending: false }),
+          supabase.from('school_messages').select('*').order('created_at', { ascending: false })
+        ]);
+
+        if (profileRes.data) state.profile = profileRes.data;
+        if (slidesRes.data) state.slides = slidesRes.data;
+        if (staffRes.data) state.staff = staffRes.data;
+        if (appsRes.data) state.apps = appsRes.data;
+        if (newsRes.data) state.news = newsRes.data;
+        if (messagesRes.data) state.messages = messagesRes.data;
+
+        if (state.currentUser?.type === 'admin') {
+          const usersRes = await supabase.from('portal_users').select('*').order('created_at', { ascending: false });
+          if (usersRes.data) state.portalUsers = usersRes.data;
+        }
+      } catch (err) {
+        showToast('Gagal memuat data dari Supabase: ' + err.message, 'error');
+      } finally {
+        state.isLoading = false;
+        updateBrandAndChrome();
+        renderCurrentView();
+      }
+    }
+
+    // =========================================================================
+    // PEMBARUAN HEADER, FOOTER, DROPDOWN APLIKASI & STATUS LOGIN
+    // =========================================================================
+    function updateBrandAndChrome() {
+      const p = state.profile;
+      const logoSrc = p.logo_url || DEFAULT_LOGO_SVG;
+
+      document.title = p.school_name || 'Portal Sekolah Modern';
+      document.getElementById('nav-school-logo').src = logoSrc;
+      document.getElementById('nav-school-name').textContent = p.school_name || 'Sekolah Modern';
+      document.getElementById('nav-school-tagline').textContent = p.tagline || '';
+
+      document.getElementById('footer-school-logo').src = logoSrc;
+      document.getElementById('footer-school-name').textContent = p.school_name || 'Sekolah Modern';
+      document.getElementById('footer-school-tagline').textContent = p.tagline || '';
+      document.getElementById('footer-school-address').textContent = p.address || '-';
+      document.getElementById('footer-school-phone').textContent = p.phone || '-';
+      document.getElementById('footer-school-email').textContent = p.email || '-';
+      document.getElementById('footer-copy-name').textContent = p.school_name || 'Sekolah Modern';
+      document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+      // Banner & Quick Login hanya aktif jika IS_PREVIEW === true
+      const previewBanner = document.getElementById('preview-banner');
+      const modalQuickLogin = document.getElementById('modal-preview-quicklogin');
+      if (IS_PREVIEW) {
+        previewBanner.classList.remove('hidden');
+        modalQuickLogin.classList.remove('hidden');
+      } else {
+        previewBanner.classList.add('hidden');
+        modalQuickLogin.classList.add('hidden');
+      }
+
+      // Render Dropdown Aplikasi (Desktop & Mobile Sheet)
+      const activeApps = state.apps.filter(a => a.is_active !== false);
+      document.getElementById('apps-count-badge').textContent = `${activeApps.length} App`;
+
+      const desktopAppsList = document.getElementById('desktop-apps-list');
+      const mobileAppsList = document.getElementById('mobile-apps-list');
+
+      if (activeApps.length === 0) {
+        const emptyHtml = `<div class="p-4 text-center text-xs text-slate-400">Belum ada aplikasi yang ditambahkan.</div>`;
+        desktopAppsList.innerHTML = emptyHtml;
+        mobileAppsList.innerHTML = emptyHtml;
+      } else {
+        desktopAppsList.innerHTML = activeApps.map(app => `
+          <a
+            href="${escapeHtml(app.embed_url)}"
+            target="_blank"
+            rel="noopener noreferrer"
+            onclick="window.appActions.onAppLinkClick('${escapeHtml(app.app_name)}')"
+            class="w-full text-left flex items-start gap-3 p-2.5 rounded-xl hover:bg-blue-50/80 transition group"
+          >
+            <div class="w-9 h-9 rounded-xl bg-blue-100/80 text-blue-900 flex items-center justify-center shrink-0 group-hover:bg-blue-900 group-hover:text-white transition">
+              <i data-lucide="${escapeHtml(app.icon_name || 'app-window')}" class="w-4 h-4"></i>
+            </div>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center justify-between gap-1">
+                <p class="text-sm font-semibold text-slate-800 group-hover:text-blue-900 truncate">${escapeHtml(app.app_name)}</p>
+                <i data-lucide="external-link" class="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-700 shrink-0"></i>
+              </div>
+              <p class="text-xs text-slate-500 line-clamp-1">${escapeHtml(app.description || 'Buka di tab baru')}</p>
+            </div>
+          </a>
+        `).join('');
+
+        mobileAppsList.innerHTML = activeApps.map(app => `
+          <a
+            href="${escapeHtml(app.embed_url)}"
+            target="_blank"
+            rel="noopener noreferrer"
+            onclick="window.appActions.onAppLinkClick('${escapeHtml(app.app_name)}')"
+            class="w-full text-left flex items-center gap-3.5 p-3 rounded-2xl bg-slate-50 hover:bg-blue-50 border border-slate-200/70 transition"
+          >
+            <div class="w-10 h-10 rounded-xl bg-blue-900 text-white flex items-center justify-center shrink-0">
+              <i data-lucide="${escapeHtml(app.icon_name || 'app-window')}" class="w-5 h-5"></i>
+            </div>
+            <div class="min-w-0 flex-1">
+              <p class="text-sm font-bold text-slate-900 truncate">${escapeHtml(app.app_name)}</p>
+              <p class="text-xs text-slate-500 line-clamp-1">${escapeHtml(app.description || 'Buka langsung di tab baru')}</p>
+            </div>
+            <i data-lucide="external-link" class="w-4 h-4 text-slate-400 shrink-0"></i>
+          </a>
+        `).join('');
+      }
+
+      // Render Auth Area di Top Navbar
+      const authArea = document.getElementById('nav-auth-area');
+      const mnavPortalLabel = document.getElementById('mnav-portal-label');
+
+      if (!state.currentUser) {
+        mnavPortalLabel.textContent = 'Portal';
+        authArea.innerHTML = `
+          <button
+            onclick="window.appActions.openLoginModal()"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-900 hover:bg-blue-800 text-white text-xs sm:text-sm font-semibold shadow-sm transition"
+          >
+            <i data-lucide="log-in" class="w-4 h-4"></i>
+            <span>Masuk</span>
+          </button>
+        `;
+      } else if (state.currentUser.type === 'admin') {
+        mnavPortalLabel.textContent = 'Admin';
+        authArea.innerHTML = `
+          <div class="flex items-center gap-1.5 sm:gap-2">
+            <button
+              onclick="window.appActions.navigate('admin')"
+              class="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-full bg-blue-900 hover:bg-blue-800 text-white text-xs sm:text-sm font-semibold shadow-sm transition"
+            >
+              <i data-lucide="settings" class="w-4 h-4"></i>
+              <span>Panel Admin</span>
+            </button>
+            <button
+              onclick="window.appActions.logout()"
+              title="Keluar"
+              class="p-2 rounded-full bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 transition"
+            >
+              <i data-lucide="log-out" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+      } else {
+        mnavPortalLabel.textContent = 'Akun';
+        authArea.innerHTML = `
+          <div class="flex items-center gap-1.5 sm:gap-2">
+            <button
+              onclick="window.appActions.navigate('portal')"
+              class="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-900 border border-blue-200 text-xs sm:text-sm font-semibold transition"
+            >
+              <i data-lucide="user-check" class="w-4 h-4"></i>
+              <span class="max-w-[90px] sm:max-w-[130px] truncate">${escapeHtml(state.currentUser.data.full_name)}</span>
+            </button>
+            <button
+              onclick="window.appActions.logout()"
+              title="Keluar"
+              class="p-2 rounded-full bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 transition"
+            >
+              <i data-lucide="log-out" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+      }
+
+      // Highlight Menu Aktif (Desktop & Mobile)
+      document.querySelectorAll('.nav-item').forEach(btn => {
+        const target = btn.getAttribute('data-nav');
+        if (target === state.currentRoute) {
+          btn.className = 'nav-item px-3.5 py-2 rounded-xl text-sm font-semibold bg-blue-900 text-white shadow-sm transition-all inline-flex items-center gap-1.5';
+        } else {
+          btn.className = 'nav-item px-3.5 py-2 rounded-xl text-sm font-medium text-slate-600 hover:text-blue-900 hover:bg-blue-50/70 transition-all inline-flex items-center gap-1.5';
+        }
+      });
+
+      document.querySelectorAll('.mnav-item').forEach(btn => {
+        const target = btn.getAttribute('data-mnav');
+        const isPortalOrAdmin = target === 'portal' && (state.currentRoute === 'portal' || state.currentRoute === 'admin');
+        if (target === state.currentRoute || isPortalOrAdmin) {
+          btn.className = 'mnav-item flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-bold bg-blue-900 text-white shadow-sm transition';
+        } else {
+          btn.className = 'mnav-item flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-medium text-slate-500 hover:text-blue-900 transition';
+        }
+      });
+
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    // =========================================================================
+    // KONTROL HERO SLIDER (4-5 GAMBAR + AUTOPLAY + TOUCH SWIPE HP/TABLET)
+    // =========================================================================
+    function startSliderAutoplay() {
+      stopSliderAutoplay();
+      const activeSlides = state.slides.filter(s => s.is_active !== false);
+      if (activeSlides.length <= 1) return;
+      state.slideInterval = setInterval(() => {
+        if (state.currentRoute === 'beranda') {
+          state.activeSlideIndex = (state.activeSlideIndex + 1) % activeSlides.length;
+          updateSliderDOM();
+        }
+      }, 5000);
+    }
+
+    function stopSliderAutoplay() {
+      if (state.slideInterval) {
+        clearInterval(state.slideInterval);
+        state.slideInterval = null;
+      }
+    }
+
+    function updateSliderDOM() {
+      const container = document.getElementById('hero-slider-content');
+      if (!container) return;
+      const activeSlides = state.slides.filter(s => s.is_active !== false);
+      if (activeSlides.length === 0) return;
+
+      if (state.activeSlideIndex >= activeSlides.length) state.activeSlideIndex = 0;
+      const slide = activeSlides[state.activeSlideIndex];
+
+      container.innerHTML = `
+        <img
+          src="${escapeHtml(slide.image_url)}"
+          alt="${escapeHtml(slide.title)}"
+          class="w-full h-full object-cover slide-fade select-none"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-900/35 to-transparent"></div>
+        <div class="absolute inset-x-0 bottom-0 p-6 sm:p-10 md:p-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div class="max-w-2xl">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-white text-xs font-semibold mb-3">
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+              Sorotan Sekolah (${state.activeSlideIndex + 1}/${activeSlides.length})
+            </span>
+            <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-2.5">
+              ${escapeHtml(slide.title)}
+            </h1>
+            <p class="text-sm sm:text-base text-slate-200 line-clamp-2 leading-relaxed">
+              ${escapeHtml(slide.subtitle || '')}
+            </p>
+          </div>
+          ${slide.cta_text ? `
+            <button
+              onclick="window.appActions.handleSlideCta('${escapeHtml(slide.cta_text)}')"
+              class="self-start md:self-end shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white text-blue-950 hover:bg-blue-50 font-bold text-xs sm:text-sm shadow-lg transition"
+            >
+              <span>${escapeHtml(slide.cta_text)}</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          ` : ''}
+        </div>
+      `;
+
+      // Update indikator titik
+      const dotsEl = document.getElementById('hero-slider-dots');
+      if (dotsEl) {
+        dotsEl.innerHTML = activeSlides.map((_, idx) => `
+          <button
+            onclick="window.appActions.goToSlide(${idx})"
+            aria-label="Slide ${idx + 1}"
+            class="h-2 rounded-full transition-all duration-300 ${idx === state.activeSlideIndex ? 'w-7 bg-white' : 'w-2 bg-white/45 hover:bg-white/75'}"
+          ></button>
+        `).join('');
+      }
+
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    // =========================================================================
+    // RENDER HALAMAN 1: BERANDA (HERO SLIDER + SAMBUTAN KS + HIGHLIGHTS)
+    // =========================================================================
+    function renderBerandaView() {
+      const activeSlides = state.slides.filter(s => s.is_active !== false);
+      const p = state.profile;
+      const latestNews = state.news.slice(0, 3);
+      const guruCount = state.staff.filter(s => s.role_type === 'Guru').length;
+      const tendikCount = state.staff.filter(s => s.role_type === 'Tendik').length;
+
+      return `
+        <div class="space-y-10 sm:space-y-14">
+          <!-- HERO IMAGE SLIDER (4-5 GAMBAR + TOUCH SWIPE) -->
+          <section
+            id="hero-slider-section"
+            onmouseenter="window.appActions.pauseSlider()"
+            onmouseleave="window.appActions.resumeSlider()"
+            ontouchstart="window.appActions.handleSliderTouchStart(event)"
+            ontouchend="window.appActions.handleSliderTouchEnd(event)"
+            class="relative rounded-3xl overflow-hidden shadow-xl border border-slate-200/70 bg-slate-900 aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9] min-h-[340px] max-h-[540px]"
+          >
+            ${activeSlides.length === 0 ? `
+              <div class="w-full h-full flex flex-col items-center justify-center text-center p-6 text-slate-300">
+                <i data-lucide="images" class="w-12 h-12 mb-3 text-slate-400"></i>
+                <h2 class="text-xl font-bold text-white">Belum Ada Gambar Slide</h2>
+                <p class="text-sm text-slate-400 max-w-md mt-1">Admin dapat menambahkan 4–5 gambar unggulan sekolah melalui Panel Admin.</p>
+              </div>
+            ` : `
+              <div id="hero-slider-content" class="w-full h-full relative"></div>
+
+              <!-- Tombol Navigasi Kiri & Kanan -->
+              ${activeSlides.length > 1 ? `
+                <button
+                  onclick="window.appActions.prevSlide()"
+                  aria-label="Slide Sebelumnya"
+                  class="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/20 hover:bg-white/35 backdrop-blur-md border border-white/25 text-white flex items-center justify-center transition"
+                >
+                  <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                </button>
+                <button
+                  onclick="window.appActions.nextSlide()"
+                  aria-label="Slide Berikutnya"
+                  class="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/20 hover:bg-white/35 backdrop-blur-md border border-white/25 text-white flex items-center justify-center transition"
+                >
+                  <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                </button>
+                <div id="hero-slider-dots" class="absolute top-4 right-5 flex items-center gap-1.5 z-10"></div>
+              ` : ''}
+            `}
+          </section>
+
+          <!-- STATISTIK RINGKAS GLASSMORPHISM -->
+          <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+            <div class="glass-card rounded-2xl p-4 sm:p-5 flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-2xl bg-blue-900/10 text-blue-900 flex items-center justify-center shrink-0">
+                <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <p class="text-xl sm:text-2xl font-extrabold text-slate-900">${guruCount}</p>
+                <p class="text-xs text-slate-500 font-medium">Tenaga Pendidik</p>
+              </div>
+            </div>
+            <div class="glass-card rounded-2xl p-4 sm:p-5 flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0">
+                <i data-lucide="briefcase" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <p class="text-xl sm:text-2xl font-extrabold text-slate-900">${tendikCount}</p>
+                <p class="text-xs text-slate-500 font-medium">Tenaga Kependidikan</p>
+              </div>
+            </div>
+            <div class="glass-card rounded-2xl p-4 sm:p-5 flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0">
+                <i data-lucide="layout-grid" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <p class="text-xl sm:text-2xl font-extrabold text-slate-900">${state.apps.filter(a => a.is_active !== false).length}</p>
+                <p class="text-xs text-slate-500 font-medium">Aplikasi Terpadu</p>
+              </div>
+            </div>
+            <div class="glass-card rounded-2xl p-4 sm:p-5 flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-2xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center shrink-0">
+                <i data-lucide="award" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <p class="text-xl sm:text-2xl font-extrabold text-slate-900">Terakreditasi A</p>
+                <p class="text-xs text-slate-500 font-medium">Standar Nasional</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- SAMBUTAN KEPALA SEKOLAH (2-Column Asymmetric Glass Layout) -->
+          <section class="glass-card rounded-3xl p-6 sm:p-8 lg:p-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              <!-- Kolom Foto Kepala Sekolah -->
+              <div class="lg:col-span-4 flex flex-col items-center">
+                <div class="relative w-56 sm:w-64 lg:w-full max-w-[280px] aspect-[4/5] rounded-3xl overflow-hidden shadow-xl border-4 border-white bg-slate-100">
+                  <img
+                    src="${escapeHtml(p.principal_photo_url || DEFAULT_AVATAR_SVG)}"
+                    alt="${escapeHtml(p.principal_name)}"
+                    class="w-full h-full object-cover"
+                  />
+                  <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/90 via-slate-900/60 to-transparent p-4 text-white">
+                    <span class="text-[10px] uppercase tracking-widest text-amber-300 font-bold block">Kepala Sekolah</span>
+                    <p class="font-bold text-sm sm:text-base leading-snug mt-0.5">${escapeHtml(p.principal_name || 'Kepala Sekolah')}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Kolom Teks Sambutan -->
+              <div class="lg:col-span-8 space-y-4">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 text-blue-900 text-xs font-bold uppercase tracking-wider">
+                  <i data-lucide="quote" class="w-3.5 h-3.5"></i>
+                  <span>Sambutan Kepala Sekolah</span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight">
+                  Membangun Generasi Cerdas, Berkarakter & Siap Menghadapi Masa Depan
+                </h2>
+                <div class="text-slate-600 text-sm sm:text-base leading-relaxed whitespace-pre-line bg-white/70 rounded-2xl p-5 border border-slate-100">
+                  ${escapeHtml(p.principal_greeting || 'Belum ada teks sambutan Kepala Sekolah.')}
+                </div>
+                <div class="pt-2 flex flex-wrap items-center gap-3">
+                  <button
+                    onclick="window.appActions.navigate('profil')"
+                    class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-900 hover:bg-blue-800 text-white text-sm font-semibold shadow-sm transition"
+                  >
+                    <span>Kenali Profil & Guru Kami</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                  </button>
+                  <button
+                    onclick="window.appActions.openMobileAppsSheet()"
+                    class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 text-sm font-semibold transition"
+                  >
+                    <i data-lucide="layout-grid" class="w-4 h-4 text-blue-700"></i>
+                    <span>Akses Aplikasi Sekolah</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- BERITA & PRESTASI TERBARU -->
+          <section class="space-y-5">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-blue-700">Kabar Terkini</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-0.5">Berita & Prestasi Sekolah</h2>
+              </div>
+              <button
+                onclick="window.appActions.navigate('berita')"
+                class="self-start sm:self-auto inline-flex items-center gap-1.5 text-sm font-semibold text-blue-900 hover:text-blue-700 transition"
+              >
+                <span>Lihat Semua Berita</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+
+            ${latestNews.length === 0 ? `
+              <div class="glass-card rounded-3xl p-10 text-center text-slate-500">
+                <i data-lucide="newspaper" class="w-10 h-10 mx-auto mb-2 text-slate-300"></i>
+                <p class="font-semibold text-slate-700">Belum ada berita atau pengumuman</p>
+                <p class="text-xs mt-1">Artikel berita yang ditambahkan Admin akan tampil di sini.</p>
+              </div>
+            ` : `
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                ${latestNews.map(item => renderNewsCard(item)).join('')}
+              </div>
+            `}
+          </section>
+        </div>
+      `;
+    }
+
+    // =========================================================================
+    // RENDER HALAMAN 2: PROFIL SEKOLAH + DIREKTORI GURU & TENDIK (+ UNGGAH FOTO)
+    // =========================================================================
+    function renderProfilView() {
+      const p = state.profile;
+      const filteredStaff = state.staff.filter(st => {
+        const matchRole = state.staffFilter === 'Semua' || st.role_type === state.staffFilter;
+        const q = state.staffSearch.toLowerCase().trim();
+        const matchQuery = !q ||
+          (st.full_name && st.full_name.toLowerCase().includes(q)) ||
+          (st.position_subject && st.position_subject.toLowerCase().includes(q));
+        return matchRole && matchQuery;
+      });
+
+      const isLoggedInStaff = state.currentUser?.type === 'warga' &&
+        (state.currentUser.data.role === 'Guru' || state.currentUser.data.role === 'Tendik');
+
+      return `
+        <div class="space-y-10">
+          <!-- Header Identitas & Logo Sekolah -->
+          <section class="glass-card rounded-3xl p-6 sm:p-10">
+            <div class="flex flex-col md:flex-row items-center md:items-start gap-6 sm:gap-8">
+              <div class="w-28 h-28 sm:w-36 sm:h-36 rounded-3xl bg-white shadow-md border border-slate-200/80 p-3 flex items-center justify-center shrink-0">
+                <img src="${escapeHtml(p.logo_url || DEFAULT_LOGO_SVG)}" alt="Logo Sekolah" class="w-full h-full object-contain" />
+              </div>
+              <div class="text-center md:text-left flex-1 space-y-3">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-900 text-xs font-bold uppercase tracking-wider">
+                  Profil Resmi Institusi
+                </span>
+                <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900">${escapeHtml(p.school_name)}</h1>
+                <p class="text-sm sm:text-base text-slate-600 max-w-3xl">${escapeHtml(p.tagline || '')}</p>
+                <div class="pt-2 flex flex-wrap justify-center md:justify-start gap-3 text-xs sm:text-sm text-slate-600">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100">
+                    <i data-lucide="map-pin" class="w-4 h-4 text-blue-800"></i>
+                    ${escapeHtml(p.address || '-')}
+                  </span>
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100">
+                    <i data-lucide="phone" class="w-4 h-4 text-blue-800"></i>
+                    ${escapeHtml(p.phone || '-')}
+                  </span>
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100">
+                    <i data-lucide="mail" class="w-4 h-4 text-blue-800"></i>
+                    ${escapeHtml(p.email || '-')}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Visi & Misi Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 pt-8 border-t border-slate-200/70">
+              <div class="bg-white/90 rounded-2xl p-6 border border-slate-100 shadow-sm">
+                <div class="w-10 h-10 rounded-xl bg-blue-900 text-white flex items-center justify-center mb-3">
+                  <i data-lucide="eye" class="w-5 h-5"></i>
+                </div>
+                <h3 class="font-bold text-lg text-slate-900 mb-2">Visi Sekolah</h3>
+                <p class="text-sm sm:text-base text-slate-600 leading-relaxed whitespace-pre-line">
+                  ${escapeHtml(p.vision || 'Belum ada data visi.')}
+                </p>
+              </div>
+              <div class="bg-white/90 rounded-2xl p-6 border border-slate-100 shadow-sm">
+                <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center mb-3">
+                  <i data-lucide="target" class="w-5 h-5"></i>
+                </div>
+                <h3 class="font-bold text-lg text-slate-900 mb-2">Misi Sekolah</h3>
+                <p class="text-sm sm:text-base text-slate-600 leading-relaxed whitespace-pre-line">
+                  ${escapeHtml(p.mission || 'Belum ada data misi.')}
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- DIREKTORI GURU & TENAGA KEPENDIDIKAN (+ FITUR UNGGAH FOTO) -->
+          <section class="space-y-6">
+            <div class="glass-card rounded-3xl p-6 sm:p-8">
+              <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-slate-200/70">
+                <div>
+                  <span class="text-xs font-bold uppercase tracking-wider text-blue-700">Sumber Daya Manusia</span>
+                  <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-0.5">Direktori Guru & Tendik</h2>
+                  <p class="text-xs sm:text-sm text-slate-500 mt-1">
+                    Guru & Tendik dapat memperbarui foto profil secara mandiri melalui Portal Warga atau langsung pada kartu profilnya setelah login.
+                  </p>
+                </div>
+
+                <!-- Banner Aksi Unggah Foto untuk Guru & Tendik -->
+                <div class="shrink-0">
+                  ${isLoggedInStaff ? `
+                    <button
+                      onclick="window.appActions.navigate('portal')"
+                      class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-semibold shadow-sm transition"
+                    >
+                      <i data-lucide="camera" class="w-4 h-4"></i>
+                      <span>Unggah Foto Profil Saya</span>
+                    </button>
+                  ` : `
+                    <button
+                      onclick="window.appActions.openLoginModal('warga')"
+                      class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-900 border border-blue-200 text-xs sm:text-sm font-semibold transition"
+                    >
+                      <i data-lucide="camera" class="w-4 h-4"></i>
+                      <span>Login Guru/Tendik untuk Unggah Foto</span>
+                    </button>
+                  `}
+                </div>
+              </div>
+
+              <!-- Filter & Pencarian Guru/Tendik -->
+              <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 my-6">
+                <div class="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl self-start">
+                  ${['Semua', 'Guru', 'Tendik'].map(role => `
+                    <button
+                      onclick="window.appActions.setStaffFilter('${role}')"
+                      class="px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition ${state.staffFilter === role ? 'bg-white text-blue-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'}"
+                    >
+                      ${role}
+                    </button>
+                  `).join('')}
+                </div>
+
+                <div class="relative w-full sm:w-72">
+                  <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                  <input
+                    id="staff-search-input"
+                    type="text"
+                    value="${escapeHtml(state.staffSearch)}"
+                    oninput="window.appActions.setStaffSearch(this.value)"
+                    placeholder="Cari nama atau jabatan..."
+                    class="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 bg-white text-sm focus:border-blue-600 outline-none"
+                  />
+                </div>
+              </div>
+
+              <!-- Grid Kartu Guru & Tendik -->
+              ${filteredStaff.length === 0 ? `
+                <div class="py-12 text-center text-slate-500">
+                  <i data-lucide="users" class="w-10 h-10 mx-auto mb-2 text-slate-300"></i>
+                  <p class="font-semibold text-slate-700">Belum ada data Guru / Tendik yang ditampilkan</p>
+                  <p class="text-xs mt-1">Admin dapat menambahkan daftar Guru & Tendik di Panel Admin.</p>
+                </div>
+              ` : `
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                  ${filteredStaff.map(st => {
+                    const canDirectUpload = (state.currentUser?.type === 'admin') ||
+                      (state.currentUser?.type === 'warga' && state.currentUser.data.staff_id === st.id);
+
+                    return `
+                      <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm hover:shadow-md transition group flex flex-col">
+                        <div class="relative aspect-[4/4] bg-slate-100 overflow-hidden">
+                          <img
+                            src="${escapeHtml(st.photo_url || DEFAULT_AVATAR_SVG)}"
+                            alt="${escapeHtml(st.full_name)}"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                          <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-bold shadow-sm ${st.role_type === 'Guru' ? 'bg-blue-900 text-white' : 'bg-amber-500 text-white'}">
+                            ${escapeHtml(st.role_type)}
+                          </span>
+
+                          ${canDirectUpload ? `
+                            <label
+                              title="Unggah Foto Baru"
+                              class="cursor-pointer absolute bottom-3 right-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/95 hover:bg-blue-900 text-slate-800 hover:text-white text-xs font-bold shadow-md transition"
+                            >
+                              <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                              <span>Ganti Foto</span>
+                              <input
+                                type="file"
+                                accept="image/*"
+                                class="hidden"
+                                onchange="window.appActions.handleDirectStaffPhotoUpload(event, '${st.id}')"
+                              />
+                            </label>
+                          ` : ''}
+                        </div>
+                        <div class="p-4 flex-1 flex flex-col justify-between">
+                          <div>
+                            <h3 class="font-bold text-slate-900 text-sm sm:text-base leading-snug">${escapeHtml(st.full_name)}</h3>
+                            <p class="text-xs text-blue-800 font-medium mt-1">${escapeHtml(st.position_subject || '-')}</p>
+                          </div>
+                          ${st.nip ? `<p class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">NIP/ID: ${escapeHtml(st.nip)}</p>` : ''}
+                        </div>
+                      </div>
+                    `;
+                  }).join('')}
+                </div>
+              `}
+            </div>
+          </section>
+        </div>
+      `;
+    }
+
+    // =========================================================================
+    // RENDER HALAMAN 3: BERITA & PRESTASI
+    // =========================================================================
+    function getNewsImagesList(item) {
+      if (Array.isArray(item.images) && item.images.length > 0) return item.images;
+      if (item.image_url) return [item.image_url];
+      return [generateBannerSvg(item.title, '#1E3A8A', '#3B82F6')];
+    }
+
+    function renderNewsCard(item) {
+      const imgs = getNewsImagesList(item);
+      return `
+        <article class="glass-card rounded-2xl overflow-hidden flex flex-col hover:-translate-y-1 transition-all duration-300">
+          <div onclick="window.appActions.openNewsModal('${item.id}')" class="cursor-pointer relative h-48 bg-slate-100 overflow-hidden">
+            <img
+              src="${escapeHtml(imgs[0])}"
+              alt="${escapeHtml(item.title)}"
+              class="w-full h-full object-cover"
+            />
+            <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold bg-white/90 text-blue-950 shadow-sm">
+              ${escapeHtml(item.category || 'Berita')}
+            </span>
+            ${imgs.length > 1 ? `
+              <span class="absolute bottom-3 right-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-900/75 text-white backdrop-blur-sm shadow">
+                <i data-lucide="images" class="w-3.5 h-3.5"></i>
+                <span>${imgs.length} Foto</span>
+              </span>
+            ` : ''}
+          </div>
+          <div class="p-5 flex-1 flex flex-col justify-between">
+            <div>
+              <p class="text-xs text-slate-400 mb-1.5">${formatDateIndo(item.published_at)}</p>
+              <h3 onclick="window.appActions.openNewsModal('${item.id}')" class="cursor-pointer font-bold text-lg text-slate-900 hover:text-blue-900 leading-snug mb-2 line-clamp-2 transition">${escapeHtml(item.title)}</h3>
+              <p class="text-xs sm:text-sm text-slate-600 line-clamp-3 leading-relaxed">${escapeHtml(item.content)}</p>
+            </div>
+            <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between gap-2">
+              <button
+                onclick="window.appActions.openNewsModal('${item.id}')"
+                class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-blue-900 hover:text-blue-700 transition"
+              >
+                <span>Baca Selengkapnya</span>
+                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+              </button>
+              <div class="flex items-center gap-1">
+                <button
+                  onclick="window.appActions.shareNews('${item.id}', 'whatsapp')"
+                  title="Bagikan ke WhatsApp"
+                  class="p-2 rounded-xl bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white transition"
+                >
+                  <i data-lucide="message-circle" class="w-4 h-4"></i>
+                </button>
+                <button
+                  onclick="window.appActions.shareNews('${item.id}', 'native')"
+                  title="Bagikan Berita"
+                  class="p-2 rounded-xl bg-slate-100 hover:bg-blue-900 text-slate-600 hover:text-white transition"
+                >
+                  <i data-lucide="share-2" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderBeritaView() {
+      const categories = ['Semua', 'Pengumuman', 'Prestasi', 'Kegiatan'];
+      const filtered = state.news.filter(n => state.newsFilter === 'Semua' || n.category === state.newsFilter);
+
+      return `
+        <div class="space-y-6">
+          <div class="glass-card rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-blue-700">Publikasi Resmi</span>
+              <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-0.5">Berita, Pengumuman & Prestasi</h1>
+            </div>
+            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar p-1 bg-slate-100 rounded-xl">
+              ${categories.map(cat => `
+                <button
+                  onclick="window.appActions.setNewsFilter('${cat}')"
+                  class="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap transition ${state.newsFilter === cat ? 'bg-white text-blue-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'}"
+                >
+                  ${cat}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+
+          ${filtered.length === 0 ? `
+            <div class="glass-card rounded-3xl p-12 text-center text-slate-500">
+              <i data-lucide="newspaper" class="w-12 h-12 mx-auto mb-3 text-slate-300"></i>
+              <p class="font-bold text-slate-700 text-lg">Belum ada publikasi pada kategori ini</p>
+              <p class="text-sm mt-1">Silakan pilih kategori lain atau tambahkan berita melalui Panel Admin.</p>
+            </div>
+          ` : `
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              ${filtered.map(item => renderNewsCard(item)).join('')}
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    // =========================================================================
+    // RENDER HALAMAN 4: WORKSPACE EMBED APLIKASI (DARI DROPDOWN MENU)
+    // =========================================================================
+    function renderAplikasiView() {
+      const activeApps = state.apps.filter(a => a.is_active !== false);
+      const selectedApp = activeApps.find(a => a.id === state.activeAppId) || activeApps[0] || null;
+
+      if (!selectedApp) {
+        return `
+          <div class="glass-card rounded-3xl p-12 text-center text-slate-500">
+            <i data-lucide="layout-grid" class="w-12 h-12 mx-auto mb-3 text-slate-300"></i>
+            <h2 class="text-xl font-bold text-slate-800">Belum Ada Aplikasi Embed</h2>
+            <p class="text-sm mt-1 max-w-md mx-auto">Admin dapat menambahkan daftar aplikasi sekolah (E-Rapor, CBT, Perpustakaan, dll) melalui Panel Admin.</p>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="space-y-4">
+          <!-- Selector Bar Aplikasi -->
+          <div class="glass-card rounded-2xl p-3 sm:p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 lg:pb-0">
+              ${activeApps.map(app => `
+                <button
+                  onclick="window.appActions.openEmbeddedApp('${app.id}')"
+                  class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition ${app.id === selectedApp.id ? 'bg-blue-900 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-blue-50'}"
+                >
+                  <i data-lucide="${escapeHtml(app.icon_name || 'app-window')}" class="w-4 h-4"></i>
+                  <span>${escapeHtml(app.app_name)}</span>
+                </button>
+              `).join('')}
+            </div>
+
+            <!-- Kontrol Toolbar Embed -->
+            <div class="flex items-center gap-2 self-end lg:self-auto shrink-0">
+              <button
+                onclick="window.appActions.reloadEmbedIframe()"
+                class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition"
+                title="Muat Ulang Aplikasi"
+              >
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                <span>Muat Ulang</span>
+              </button>
+              <button
+                onclick="window.appActions.toggleEmbedFullscreen()"
+                class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-900 text-xs font-semibold transition"
+                title="Mode Layar Penuh"
+              >
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+                <span>Layar Penuh</span>
+              </button>
+              <a
+                href="${escapeHtml(selectedApp.embed_url)}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition"
+              >
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                <span class="hidden sm:inline">Tab Baru</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Container Iframe Responsif -->
+          <div id="embed-frame-wrapper" class="glass-card rounded-3xl overflow-hidden border border-slate-200 shadow-lg bg-white">
+            <div class="px-5 py-3 bg-slate-50 border-b border-slate-200/80 flex items-center justify-between">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0"></span>
+                <h2 class="font-bold text-sm sm:text-base text-slate-900 truncate">${escapeHtml(selectedApp.app_name)}</h2>
+                <span class="hidden md:inline text-xs text-slate-400 truncate">— ${escapeHtml(selectedApp.description || '')}</span>
+              </div>
+              <span class="text-[11px] font-medium text-slate-400 shrink-0">Embed View</span>
+            </div>
+            <div class="w-full h-[68vh] sm:h-[74vh] bg-slate-100 relative">
+              <iframe
+                id="school-app-iframe"
+                src="${escapeHtml(selectedApp.embed_url)}"
+                title="${escapeHtml(selectedApp.app_name)}"
+                class="w-full h-full border-0"
+                allowfullscreen
+                loading="lazy"
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // =========================================================================
+    // RENDER HALAMAN 5: PORTAL WARGA SEKOLAH (GURU, TENDIK & SISWA)
+    // =========================================================================
+    function renderPortalView() {
+      if (!state.currentUser) {
+        return `
+          <div class="max-w-lg mx-auto my-8 glass-card rounded-3xl p-8 text-center">
+            <div class="w-16 h-16 rounded-3xl bg-blue-900 text-white flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <i data-lucide="users" class="w-8 h-8"></i>
+            </div>
+            <h1 class="text-2xl font-extrabold text-slate-900">Portal Warga Sekolah</h1>
+            <p class="text-sm text-slate-600 mt-2 mb-6 leading-relaxed">
+              Silakan masuk menggunakan akun <strong>Guru, Tenaga Kependidikan (Tendik), atau Siswa</strong> untuk mengunggah foto profil direktori sekolah dan mengirim aspirasi.
+            </p>
+            <button
+              onclick="window.appActions.openLoginModal('warga')"
+              class="w-full py-3.5 rounded-2xl bg-blue-900 hover:bg-blue-800 text-white font-bold text-sm shadow-md transition inline-flex items-center justify-center gap-2"
+            >
+              <i data-lucide="log-in" class="w-4 h-4"></i>
+              <span>Masuk Sekarang</span>
+            </button>
+          </div>
+        `;
+      }
+
+      if (state.currentUser.type === 'admin') {
+        return renderAdminView();
+      }
+
+      const user = state.currentUser.data;
+      const isGuruOrTendik = user.role === 'Guru' || user.role === 'Tendik';
+      const linkedStaff = state.staff.find(s => s.id === user.staff_id) ||
+        state.staff.find(s => s.full_name.toLowerCase() === user.full_name.toLowerCase());
+
+      return `
+        <div class="space-y-6">
+          <!-- Header Selamat Datang -->
+          <div class="glass-card rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-900 text-xs font-bold">
+                Akun ${escapeHtml(user.role)}
+              </span>
+              <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1.5">Halo, ${escapeHtml(user.full_name)}</h1>
+              <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Keterangan: ${escapeHtml(user.class_info || user.role)}</p>
+            </div>
+            <button
+              onclick="window.appActions.logout()"
+              class="self-start sm:self-auto inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs sm:text-sm font-semibold transition"
+            >
+              <i data-lucide="log-out" class="w-4 h-4"></i>
+              <span>Keluar Akun</span>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Kartu Unggah Foto Profil Mandiri (Khusus Guru & Tendik) -->
+            ${isGuruOrTendik ? `
+              <div class="lg:col-span-5 glass-card rounded-3xl p-6 flex flex-col items-center text-center">
+                <span class="text-xs font-bold uppercase tracking-wider text-blue-700 mb-3">Foto Direktori Profil Sekolah</span>
+                <div class="w-36 h-36 rounded-3xl overflow-hidden border-4 border-white shadow-lg bg-slate-100 mb-4">
+                  <img
+                    src="${escapeHtml(linkedStaff?.photo_url || DEFAULT_AVATAR_SVG)}"
+                    alt="Foto Profil"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <h3 class="font-bold text-lg text-slate-900">${escapeHtml(user.full_name)}</h3>
+                <p class="text-xs text-slate-500 mb-4">${escapeHtml(linkedStaff?.position_subject || user.class_info || user.role)}</p>
+
+                ${linkedStaff ? `
+                  <label class="cursor-pointer w-full py-3 px-4 rounded-2xl bg-blue-900 hover:bg-blue-800 text-white font-semibold text-sm shadow-md transition inline-flex items-center justify-center gap-2">
+                    <i data-lucide="upload-cloud" class="w-4 h-4"></i>
+                    <span>Unggah / Ganti Foto Profil</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      class="hidden"
+                      onchange="window.appActions.handleDirectStaffPhotoUpload(event, '${linkedStaff.id}')"
+                    />
+                  </label>
+                  <p class="text-[11px] text-slate-400 mt-2.5">Foto otomatis dikompresi & langsung tampil di halaman Profil Sekolah.</p>
+                ` : `
+                  <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs">
+                    Akun Anda belum ditautkan ke data Direktori Guru/Tendik oleh Admin. Hubungi Admin sekolah untuk menautkan profil Anda.
+                  </div>
+                `}
+              </div>
+            ` : ''}
+
+            <!-- Form Kirim Aspirasi / Pesan ke Sekolah -->
+            <div class="${isGuruOrTendik ? 'lg:col-span-7' : 'lg:col-span-12'} glass-card rounded-3xl p-6 sm:p-8">
+              <h3 class="font-bold text-xl text-slate-900 mb-1">Kirim Aspirasi & Laporan ke Sekolah</h3>
+              <p class="text-xs sm:text-sm text-slate-500 mb-5">Pesan Anda akan diteruskan langsung kepada Administrator & Pimpinan Sekolah.</p>
+              <form onsubmit="window.appActions.handleSendMessage(event)" class="space-y-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1.5">Subjek / Topik</label>
+                  <input type="text" id="msg-subject" required placeholder="Contoh: Usulan kegiatan atau kendala fasilitas" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1.5">Isi Pesan</label>
+                  <textarea id="msg-body" rows="4" required placeholder="Tuliskan pesan atau masukan Anda secara jelas..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600"></textarea>
+                </div>
+                <button type="submit" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-900 hover:bg-blue-800 text-white font-semibold text-sm shadow-sm transition">
+                  <i data-lucide="send" class="w-4 h-4"></i>
+                  <span>Kirim Pesan</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // =========================================================================
+    // RENDER HALAMAN 6: PANEL ADMIN LENGKAP (100% MENU & FITUR)
+    // =========================================================================
+    function renderAdminView() {
+      if (state.currentUser?.type !== 'admin') {
+        return renderPortalView();
+      }
+
+      const tabs = [
+        { id: 'profil', label: 'Profil & Logo', icon: 'school' },
+        { id: 'sambutan', label: 'Sambutan KS', icon: 'quote' },
+        { id: 'slider', label: 'Slider (4-5 Gambar)', icon: 'images' },
+        { id: 'staff', label: 'Guru & Tendik', icon: 'users' },
+        { id: 'apps', label: 'Menu Aplikasi', icon: 'layout-grid' },
+        { id: 'berita', label: 'Berita & Prestasi', icon: 'newspaper' },
+        { id: 'users', label: 'Akun Warga & Pesan', icon: 'user-cog' }
+      ];
+
+      return `
+        <div class="space-y-6">
+          <!-- Header Panel Admin -->
+          <div class="glass-card rounded-3xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900 text-white text-xs font-bold">
+                <i data-lucide="shield" class="w-3.5 h-3.5 text-amber-400"></i> Administrator Sekolah
+              </span>
+              <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1.5">Panel Manajemen Website</h1>
+              <p class="text-xs sm:text-sm text-slate-500">Login sebagai: ${escapeHtml(state.currentUser.data.email)}</p>
+            </div>
+            <button
+              onclick="window.appActions.logout()"
+              class="self-start sm:self-auto inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs sm:text-sm font-semibold shadow-sm transition"
+            >
+              <i data-lucide="log-out" class="w-4 h-4"></i>
+              <span>Keluar Admin</span>
+            </button>
+          </div>
+
+          <!-- Navigasi Tab Admin (Scrollable di HP/Tablet) -->
+          <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+            ${tabs.map(t => `
+              <button
+                onclick="window.appActions.setAdminTab('${t.id}')"
+                class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold whitespace-nowrap transition ${state.adminTab === t.id ? 'bg-blue-900 text-white shadow-md' : 'glass-card text-slate-700 hover:bg-white'}"
+              >
+                <i data-lucide="${t.icon}" class="w-4 h-4"></i>
+                <span>${t.label}</span>
+              </button>
+            `).join('')}
+          </div>
+
+          <!-- Konten Tab Aktif -->
+          <div class="glass-card rounded-3xl p-6 sm:p-8">
+            ${renderAdminTabContent()}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderAdminTabContent() {
+      const p = state.profile;
+
+      // 1. TAB UBAH PROFIL & LOGO SEKOLAH
+      if (state.adminTab === 'profil') {
+        return `
+          <form onsubmit="window.appActions.saveSchoolProfile(event)" class="space-y-6">
+            <div class="border-b border-slate-100 pb-4">
+              <h2 class="text-xl font-bold text-slate-900">Ubah Profil & Logo Sekolah</h2>
+              <p class="text-xs sm:text-sm text-slate-500">Perubahan akan langsung memperbarui tampilan di Header, Halaman Profil, dan Footer.</p>
+            </div>
+
+            <!-- Upload / Preview Logo -->
+            <div class="flex flex-col sm:flex-row items-center gap-5 p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
+              <div class="w-24 h-24 rounded-2xl bg-white border border-slate-200 p-2 flex items-center justify-center shrink-0 shadow-sm">
+                <img id="admin-logo-preview" src="${escapeHtml(p.logo_url || DEFAULT_LOGO_SVG)}" alt="Preview Logo" class="w-full h-full object-contain" />
+              </div>
+              <div class="flex-1 space-y-2.5 text-center sm:text-left w-full">
+                <label class="block text-xs font-bold text-slate-700">Logo Sekolah (Unggah File atau Tempel URL)</label>
+                <div class="flex flex-col sm:flex-row gap-2">
+                  <label class="cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold transition shrink-0">
+                    <i data-lucide="upload" class="w-4 h-4"></i>
+                    <span>Pilih File Logo</span>
+                    <input type="file" accept="image/*" class="hidden" onchange="window.appActions.handleAdminLogoFile(event)" />
+                  </label>
+                  <input type="text" id="prof-logo-url" value="${escapeHtml(p.logo_url || '')}" oninput="document.getElementById('admin-logo-preview').src = this.value || '${DEFAULT_LOGO_SVG}'" placeholder="Atau masukkan URL gambar logo..." class="flex-1 px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs outline-none focus:border-blue-600" />
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1.5">Nama Sekolah</label>
+                <input type="text" id="prof-name" required value="${escapeHtml(p.school_name)}" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1.5">Tagline / Motto Singkat</label>
+                <input type="text" id="prof-tagline" value="${escapeHtml(p.tagline || '')}" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1.5">Nomor Telepon</label>
+                <input type="text" id="prof-phone" value="${escapeHtml(p.phone || '')}" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1.5">Email Resmi Sekolah</label>
+                <input type="email" id="prof-email" value="${escapeHtml(p.email || '')}" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Alamat Lengkap Sekolah</label>
+              <input type="text" id="prof-address" value="${escapeHtml(p.address || '')}" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600" />
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1.5">Visi Sekolah</label>
+                <textarea id="prof-vision" rows="4" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600">${escapeHtml(p.vision || '')}</textarea>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1.5">Misi Sekolah</label>
+                <textarea id="prof-mission" rows="4" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600">${escapeHtml(p.mission || '')}</textarea>
+              </div>
+            </div>
+
+            <button type="submit" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-900 hover:bg-blue-800 text-white font-semibold text-sm shadow-md transition">
+              <i data-lucide="save" class="w-4 h-4"></i>
+              <span>Simpan Profil & Logo Sekolah</span>
+            </button>
+          </form>
+        `;
+      }
+
+      // 2. TAB SAMBUTAN KEPALA SEKOLAH
+      if (state.adminTab === 'sambutan') {
+        return `
+          <form onsubmit="window.appActions.savePrincipalGreeting(event)" class="space-y-6">
+            <div class="border-b border-slate-100 pb-4">
+              <h2 class="text-xl font-bold text-slate-900">Kelola Sambutan Kepala Sekolah</h2>
+              <p class="text-xs sm:text-sm text-slate-500">Atur foto potret, nama beserta gelar, dan isi sambutan Kepala Sekolah di halaman Beranda.</p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center gap-5 p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
+              <img id="admin-ks-preview" src="${escapeHtml(p.principal_photo_url || DEFAULT_AVATAR_SVG)}" alt="Foto KS" class="w-24 h-28 rounded-2xl object-cover border border-slate-200 bg-white shrink-0" />
+              <div class="flex-1 space-y-2.5 w-full">
+                <label class="block text-xs font-bold text-slate-700">Foto Kepala Sekolah</label>
+                <div class="flex flex-col sm:flex-row gap-2">
+                  <label class="cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold transition shrink-0">
+                    <i data-lucide="camera" class="w-4 h-4"></i>
+                    <span>Unggah Foto KS</span>
+                    <input type="file" accept="image/*" class="hidden" onchange="window.appActions.handleAdminKsFile(event)" />
+                  </label>
+                  <input type="text" id="ks-photo-url" value="${escapeHtml(p.principal_photo_url || '')}" oninput="document.getElementById('admin-ks-preview').src = this.value || '${DEFAULT_AVATAR_SVG}'" placeholder="Atau tempel URL foto Kepala Sekolah..." class="flex-1 px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs outline-none focus:border-blue-600" />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Nama Lengkap & Gelar Kepala Sekolah</label>
+              <input type="text" id="ks-name" required value="${escapeHtml(p.principal_name || '')}" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Teks Sambutan Kepala Sekolah</label>
+              <textarea id="ks-greeting" rows="7" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm leading-relaxed outline-none focus:border-blue-600">${escapeHtml(p.principal_greeting || '')}</textarea>
+            </div>
+
+            <button type="submit" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-900 hover:bg-blue-800 text-white font-semibold text-sm shadow-md transition">
+              <i data-lucide="save" class="w-4 h-4"></i>
+              <span>Simpan Sambutan KS</span>
+            </button>
+          </form>
+        `;
+      }
+
+      // 3. TAB KELOLA HERO SLIDER (4-5 GAMBAR)
+      if (state.adminTab === 'slider') {
+        return `
+          <div class="space-y-6">
+            <div class="border-b border-slate-100 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h2 class="text-xl font-bold text-slate-900">Kelola Slide Gambar Beranda</h2>
+                <p class="text-xs sm:text-sm text-slate-500">Disarankan menampilkan 4 hingga 5 gambar utama sekolah.</p>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-blue-50 text-blue-900 text-xs font-bold self-start">
+                Total: ${state.slides.length} Slide
+              </span>
+            </div>
+
+            <!-- Form Tambah Slide Baru -->
+            <form onsubmit="window.appActions.addHeroSlide(event)" class="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-4">
+              <h3 class="font-bold text-sm text-slate-900">Tambah Gambar Slide Baru</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <input type="text" id="slide-title" required placeholder="Judul Utama Slide" class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600" />
+                <input type="text" id="slide-subtitle" placeholder="Deskripsi singkat slide..." class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600" />
+                <div class="flex gap-2">
+                  <label class="cursor-pointer inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-800 text-white text-xs font-semibold shrink-0 hover:bg-slate-700">
+                    <i data-lucide="image-plus" class="w-4 h-4"></i>
+                    <span>Unggah</span>
+                    <input type="file" accept="image/*" class="hidden" onchange="window.appActions.handleSlideImageUpload(event)" />
+                  </label>
+                  <input type="text" id="slide-img-url" required placeholder="URL Gambar / Hasil Unggah" class="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs outline-none focus:border-blue-600" />
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <input type="text" id="slide-cta" placeholder="Teks Tombol (Opsional)" class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600" />
+                  <input type="number" id="slide-order" value="${state.slides.length + 1}" min="1" max="10" placeholder="Urutan" class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600" />
+                </div>
+              </div>
+              <button type="submit" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-900 hover:bg-blue-800 text-white text-xs sm:text-sm font-semibold transition">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span>Tambahkan ke Slider</span>
+              </button>
+            </form>
+
+            <!-- Daftar Slide -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              ${state.slides.map((s, idx) => `
+                <div class="flex items-center gap-3.5 p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm">
+                  <img src="${escapeHtml(s.image_url)}" alt="Slide" class="w-24 h-16 rounded-xl object-cover bg-slate-100 shrink-0" />
+                  <div class="min-w-0 flex-1">
+                    <span class="text-[10px] font-bold uppercase text-blue-700">Slide #${s.sort_order || idx + 1}</span>
+                    <h4 class="font-bold text-sm text-slate-900 truncate">${escapeHtml(s.title)}</h4>
+                    <p class="text-xs text-slate-500 truncate">${escapeHtml(s.subtitle || '-')}</p>
+                  </div>
+                  <button
+                    onclick="window.appActions.deleteHeroSlide('${s.id}')"
+                    class="p-2 rounded-xl text-rose-600 hover:bg-rose-50 transition shrink-0"
+                    title="Hapus Slide"
+                  >
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      // 4. TAB KELOLA GURU & TENDIK (+ UNGGAH FOTO)
+      if (state.adminTab === 'staff') {
+        return `
+          <div class="space-y-6">
+            <div class="border-b border-slate-100 pb-4">
+              <h2 class="text-xl font-bold text-slate-900">Kelola Data & Foto Guru / Tendik</h2>
+              <p class="text-xs sm:text-sm text-slate-500">Tambahkan data Guru atau Tenaga Kependidikan beserta foto profilnya.</p>
+            </div>
+
+            <form onsubmit="window.appActions.addSchoolStaff(event)" class="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-4">
+              <h3 class="font-bold text-sm text-slate-900">Tambah Guru / Tendik Baru</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <input type="text" id="staff-fullname" required placeholder="Nama Lengkap & Gelar" class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600" />
+                <select id="staff-roletype" class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600">
+                  <option value="Guru">Guru (Tenaga Pendidik)</option>
+                  <option value="Tendik">Tendik (Tenaga Kependidikan)</option>
+                </select>
+                <input type="text" id="staff-position" required placeholder="Mata Pelajaran / Jabatan" class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600" />
+                <input type="text" id="staff-nip" placeholder="NIP / NUPTK / ID Pegawai (Opsional)" class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600" />
+              </div>
+              <div class="flex flex-col sm:flex-row gap-2">
+                <label class="cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 text-white text-xs font-semibold shrink-0 hover:bg-slate-700">
+                  <i data-lucide="camera" class="w-4 h-4"></i>
+                  <span>Unggah Foto</span>
+                  <input type="file" accept="image/*" class="hidden" onchange="window.appActions.handleNewStaffPhotoUpload(event)" />
+                </label>
+                <input type="text" id="staff-photo-url" placeholder="URL Foto atau otomatis terisi setelah unggah..." class="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs outline-none focus:border-blue-600" />
+              </div>
+              <button type="submit" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-900 hover:bg-blue-800 text-white text-xs sm:text-sm font-semibold transition">
+                <i data-lucide="user-plus" class="w-4 h-4"></i>
+                <span>Simpan Guru / Tendik</span>
+              </button>
+            </form>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              ${state.staff.map(st => `
+                <div class="flex items-center gap-3.5 p-3.5 rounded-2xl bg-white border border-slate-200 shadow-sm">
+                  <img src="${escapeHtml(st.photo_url || DEFAULT_AVATAR_SVG)}" alt="Foto" class="w-14 h-14 rounded-2xl object-cover bg-slate-100 shrink-0" />
+                  <div class="min-w-0 flex-1">
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${st.role_type === 'Guru' ? 'bg-blue-100 text-blue-900' : 'bg-amber-100 text-amber-800'}">
+                      ${escapeHtml(st.role_type)}
+                    </span>
+                    <h4 class="font-bold text-sm text-slate-900 truncate mt-0.5">${escapeHtml(st.full_name)}</h4>
+                    <p class="text-xs text-slate-500 truncate">${escapeHtml(st.position_subject || '-')}</p>
+                  </div>
+                  <div class="flex items-center gap-1 shrink-0">
+                    <label title="Ganti Foto" class="cursor-pointer p-2 rounded-xl text-blue-700 hover:bg-blue-50 transition">
+                      <i data-lucide="camera" class="w-4 h-4"></i>
+                      <input type="file" accept="image/*" class="hidden" onchange="window.appActions.handleDirectStaffPhotoUpload(event, '${st.id}')" />
+                    </label>
+                    <button onclick="window.appActions.deleteSchoolStaff('${st.id}')" title="Hapus" class="p-2 rounded-xl text-rose-600 hover:bg-rose-50 transition">
+                      <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      // 5. TAB KELOLA MENU APLIKASI (DROPDOWN LIST)
+      if (state.adminTab === 'apps') {
+        return `
+          <div class="space-y-6">
+            <div class="border-b border-slate-100 pb-4">
+              <h2 class="text-xl font-bold text-slate-900">Kelola Menu Aplikasi (Dropdown List)</h2>
+              <p class="text-xs sm:text-sm text-slate-500">Daftar aplikasi di bawah ini akan tampil pada dropdown menu "Aplikasi" di navigasi atas dan langsung terbuka di tab berikutnya saat diklik.</p>
+            </div>
+
+            <form onsubmit="window.appActions.addSchoolApp(event)" class="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-4">
+              <h3 class="font-bold text-sm text-slate-900">Tambah Aplikasi Baru</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <input type="text" id="app-name" required placeholder="Nama Aplikasi (misal: E-Rapor / CBT / PPDB)" class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600" />
+                <input type="url" id="app-url" required placeholder="URL Aplikasi (https://...)" class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600" />
+                <input type="text" id="app-desc" placeholder="Deskripsi singkat aplikasi..." class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600" />
+                <select id="app-icon" class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600">
+                  <option value="app-window">Ikon: Aplikasi Umum</option>
+                  <option value="book-open">Ikon: Perpustakaan / Buku</option>
+                  <option value="file-check">Ikon: E-Rapor / Penilaian</option>
+                  <option value="monitor">Ikon: CBT / Ujian Online</option>
+                  <option value="user-plus">Ikon: PPDB Online</option>
+                  <option value="calendar">Ikon: Jadwal / Akademik</option>
+                </select>
+              </div>
+              <button type="submit" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-900 hover:bg-blue-800 text-white text-xs sm:text-sm font-semibold transition">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                <span>Tambahkan ke Dropdown Aplikasi</span>
+              </button>
+            </form>
+
+            <div class="space-y-3">
+              ${state.apps.map(app => `
+                <div class="flex items-center justify-between gap-3 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm">
+                  <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-900 flex items-center justify-center shrink-0">
+                      <i data-lucide="${escapeHtml(app.icon_name || 'app-window')}" class="w-5 h-5"></i>
+                    </div>
+                    <div class="min-w-0">
+                      <h4 class="font-bold text-sm text-slate-900 truncate">${escapeHtml(app.app_name)}</h4>
+                      <p class="text-xs text-blue-700 truncate">${escapeHtml(app.embed_url)}</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2 shrink-0">
+                    <button onclick="window.appActions.openEmbeddedApp('${app.id}')" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-900 text-xs font-semibold transition">
+                      Buka Tab Baru
+                    </button>
+                    <button onclick="window.appActions.deleteSchoolApp('${app.id}')" class="p-2 rounded-lg text-rose-600 hover:bg-rose-50 transition">
+                      <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      // 6. TAB KELOLA BERITA & PRESTASI
+      if (state.adminTab === 'berita') {
+        return `
+          <div class="space-y-6">
+            <div class="border-b border-slate-100 pb-4">
+              <h2 class="text-xl font-bold text-slate-900">Kelola Berita, Pengumuman & Prestasi</h2>
+              <p class="text-xs sm:text-sm text-slate-500">Mendukung unggah beberapa gambar sekaligus dalam satu publikasi berita atau prestasi.</p>
+            </div>
+
+            <form onsubmit="window.appActions.addSchoolNews(event)" class="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-4">
+              <h3 class="font-bold text-sm text-slate-900">Terbitkan Artikel Baru</h3>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <input type="text" id="news-title" required placeholder="Judul Berita / Prestasi" class="md:col-span-2 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600" />
+                <select id="news-cat" class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600">
+                  <option value="Pengumuman">Pengumuman</option>
+                  <option value="Prestasi">Prestasi</option>
+                  <option value="Kegiatan">Kegiatan</option>
+                </select>
+              </div>
+
+              <!-- Unggah Beberapa Gambar (Multi-Upload) -->
+              <div class="space-y-2.5">
+                <div class="flex flex-col sm:flex-row gap-2">
+                  <label class="cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold shrink-0 transition shadow-sm">
+                    <i data-lucide="images" class="w-4 h-4"></i>
+                    <span>Unggah Beberapa Gambar</span>
+                    <input type="file" accept="image/*" multiple class="hidden" onchange="window.appActions.handleNewsImagesUpload(event)" />
+                  </label>
+                  <div class="flex flex-1 gap-2">
+                    <input type="url" id="news-extra-url" placeholder="Atau tempel URL gambar tambahan..." class="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs outline-none focus:border-blue-600" />
+                    <button type="button" onclick="window.appActions.addNewsDraftImageUrl()" class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold shrink-0 transition">
+                      + URL
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Pratinjau Galeri Gambar yang Akan Diunggah -->
+                <div id="news-draft-images-preview" class="${state.newsDraftImages.length === 0 ? 'hidden' : 'grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3 pt-1'}">
+                  ${state.newsDraftImages.map((imgSrc, idx) => `
+                    <div class="relative aspect-[4/3] rounded-xl overflow-hidden border border-slate-200 bg-white shadow-sm group">
+                      <img src="${escapeHtml(imgSrc)}" alt="Pratinjau ${idx + 1}" class="w-full h-full object-cover" />
+                      ${idx === 0 ? `<span class="absolute bottom-1.5 left-1.5 px-2 py-0.5 rounded-md bg-blue-900/90 text-white text-[10px] font-bold">Sampul Utama</span>` : ''}
+                      <button
+                        type="button"
+                        onclick="window.appActions.removeNewsDraftImage(${idx})"
+                        title="Hapus gambar ini"
+                        class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-rose-600 text-white flex items-center justify-center shadow hover:bg-rose-700 transition"
+                      >
+                        <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                      </button>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+
+              <textarea id="news-content" rows="4" required placeholder="Tuliskan isi berita atau detail prestasi lengkap..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600"></textarea>
+              <button type="submit" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-900 hover:bg-blue-800 text-white text-xs sm:text-sm font-semibold transition">
+                <i data-lucide="send" class="w-4 h-4"></i>
+                <span>Publikasikan Berita (${state.newsDraftImages.length} Gambar)</span>
+              </button>
+            </form>
+
+            <div class="space-y-3">
+              ${state.news.map(n => {
+                const imgs = getNewsImagesList(n);
+                return `
+                  <div class="flex items-center justify-between gap-3 p-4 rounded-2xl bg-white border border-slate-200">
+                    <div class="flex items-center gap-3 min-w-0">
+                      <img src="${escapeHtml(imgs[0])}" alt="Sampul" class="w-14 h-12 rounded-xl object-cover bg-slate-100 shrink-0" />
+                      <div class="min-w-0">
+                        <span class="text-[11px] font-bold text-blue-700">${escapeHtml(n.category)} • ${formatDateIndo(n.published_at)} • ${imgs.length} Foto</span>
+                        <h4 class="font-bold text-sm text-slate-900 truncate">${escapeHtml(n.title)}</h4>
+                      </div>
+                    </div>
+                    <button onclick="window.appActions.deleteSchoolNews('${n.id}')" class="p-2 rounded-xl text-rose-600 hover:bg-rose-50 shrink-0">
+                      <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      // 7. TAB KELOLA AKUN WARGA SEKOLAH & ASPIRASI MASUK
+      if (state.adminTab === 'users') {
+        return `
+          <div class="space-y-8">
+            <!-- Tambah Akun Warga Sekolah (Hybrid Login) -->
+            <div class="space-y-4">
+              <div class="border-b border-slate-100 pb-3">
+                <h2 class="text-xl font-bold text-slate-900">Kelola Akun Warga Sekolah (Guru, Tendik & Siswa)</h2>
+                <p class="text-xs sm:text-sm text-slate-500">Tautkan akun Guru/Tendik ke data Direktori agar mereka dapat mengunggah foto profil secara mandiri.</p>
+              </div>
+
+              <form onsubmit="window.appActions.addPortalUser(event)" class="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <input type="text" id="pu-fullname" required placeholder="Nama Lengkap" class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600" />
+                  <input type="text" id="pu-username" required placeholder="Username / NIP / NISN" class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600" />
+                  <input type="text" id="pu-password" required placeholder="Kata Sandi Login" class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600" />
+                  <select id="pu-role" class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600">
+                    <option value="Guru">Guru</option>
+                    <option value="Tendik">Tendik</option>
+                    <option value="Siswa">Siswa</option>
+                  </select>
+                  <input type="text" id="pu-class" placeholder="Mapel / Jabatan / Kelas" class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600" />
+                  <select id="pu-staff-link" class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm outline-none focus:border-blue-600">
+                    <option value="">-- Tautkan Direktori Guru/Tendik (Opsional) --</option>
+                    ${state.staff.map(s => `<option value="${s.id}">${escapeHtml(s.full_name)} (${escapeHtml(s.role_type)})</option>`).join('')}
+                  </select>
+                </div>
+                <button type="submit" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-900 hover:bg-blue-800 text-white text-xs sm:text-sm font-semibold transition">
+                  <i data-lucide="user-plus" class="w-4 h-4"></i>
+                  <span>Buat Akun Warga</span>
+                </button>
+              </form>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                ${state.portalUsers.map(u => `
+                  <div class="flex items-center justify-between p-3.5 rounded-2xl bg-white border border-slate-200">
+                    <div class="min-w-0">
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-900">${escapeHtml(u.role)}</span>
+                      <h4 class="font-bold text-sm text-slate-900 truncate mt-0.5">${escapeHtml(u.full_name)}</h4>
+                      <p class="text-xs text-slate-500">User: <strong>${escapeHtml(u.username)}</strong> • ${escapeHtml(u.class_info || '-')}</p>
+                    </div>
+                    <button onclick="window.appActions.deletePortalUser('${u.id}')" class="p-2 rounded-xl text-rose-600 hover:bg-rose-50">
+                      <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- Kotak Masuk Aspirasi Warga -->
+            <div class="space-y-3 pt-4 border-t border-slate-200">
+              <h3 class="font-bold text-lg text-slate-900">Aspirasi & Pesan Masuk (${state.messages.length})</h3>
+              ${state.messages.length === 0 ? `
+                <p class="text-xs text-slate-500">Belum ada pesan atau aspirasi masuk.</p>
+              ` : state.messages.map(m => `
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="font-bold text-sm text-slate-900">${escapeHtml(m.subject)}</span>
+                    <span class="text-[11px] text-slate-400">${formatDateIndo(m.created_at)}</span>
+                  </div>
+                  <p class="text-xs font-semibold text-blue-800">Dari: ${escapeHtml(m.sender_name)}</p>
+                  <p class="text-xs sm:text-sm text-slate-600 pt-1">${escapeHtml(m.message)}</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      return '';
+    }
+
+    // =========================================================================
+    // RENDER UTAMA BERDASARKAN ROUTE
+    // =========================================================================
+    function renderCurrentView() {
+      const container = document.getElementById('main-view-container');
+      if (!container) return;
+
+      if (state.isLoading) {
+        container.innerHTML = `
+          <div class="py-24 flex flex-col items-center justify-center text-slate-400">
+            <div class="w-10 h-10 border-4 border-blue-900 border-t-transparent rounded-full animate-spin mb-3"></div>
+            <p class="text-sm font-medium">Memuat data portal sekolah...</p>
+          </div>
+        `;
+        return;
+      }
+
+      if (state.currentRoute === 'beranda') {
+        container.innerHTML = renderBerandaView();
+        updateSliderDOM();
+        startSliderAutoplay();
+      } else {
+        stopSliderAutoplay();
+        if (state.currentRoute === 'profil') container.innerHTML = renderProfilView();
+        else if (state.currentRoute === 'berita') container.innerHTML = renderBeritaView();
+        else if (state.currentRoute === 'aplikasi') container.innerHTML = renderAplikasiView();
+        else if (state.currentRoute === 'portal') container.innerHTML = renderPortalView();
+        else if (state.currentRoute === 'admin') container.innerHTML = renderAdminView();
+      }
+
+      updateBrandAndChrome();
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    // =========================================================================
+    // KUMPULAN AKSI INTERAKTIF & OPERASI CRUD (PREVIEW vs SUPABASE PRODUKSI)
+    // =========================================================================
+    window.appActions = {
+      navigate(route) {
+        state.currentRoute = route;
+        document.getElementById('desktop-apps-menu')?.classList.add('hidden');
+        document.getElementById('desktop-apps-chevron')?.classList.remove('rotate-180');
+        document.getElementById('mobile-apps-sheet')?.classList.add('hidden');
+        document.getElementById('school-webapp-root')?.scrollTo({ top: 0, behavior: 'smooth' });
+        renderCurrentView();
+      },
+
+      // Kontrol Hero Slider
+      pauseSlider() {
+        stopSliderAutoplay();
+      },
+
+      resumeSlider() {
+        startSliderAutoplay();
+      },
+
+      goToSlide(index) {
+        state.activeSlideIndex = index;
+        updateSliderDOM();
+        startSliderAutoplay();
+      },
+
+      prevSlide() {
+        const activeSlides = state.slides.filter(s => s.is_active !== false);
+        if (activeSlides.length === 0) return;
+        state.activeSlideIndex = (state.activeSlideIndex - 1 + activeSlides.length) % activeSlides.length;
+        updateSliderDOM();
+        startSliderAutoplay();
+      },
+
+      nextSlide() {
+        const activeSlides = state.slides.filter(s => s.is_active !== false);
+        if (activeSlides.length === 0) return;
+        state.activeSlideIndex = (state.activeSlideIndex + 1) % activeSlides.length;
+        updateSliderDOM();
+        startSliderAutoplay();
+      },
+
+      handleSliderTouchStart(event) {
+        if (event.touches && event.touches.length > 0) {
+          state.touchStartX = event.touches[0].clientX;
+        }
+      },
+
+      handleSliderTouchEnd(event) {
+        if (!event.changedTouches || event.changedTouches.length === 0) return;
+        const diffX = event.changedTouches[0].clientX - state.touchStartX;
+        if (Math.abs(diffX) > 40) {
+          if (diffX < 0) this.nextSlide();
+          else this.prevSlide();
+        }
+      },
+
+      handleSlideCta(ctaText) {
+        const lower = (ctaText || '').toLowerCase();
+        if (lower.includes('profil') || lower.includes('guru')) {
+          this.navigate('profil');
+        } else if (lower.includes('berita') || lower.includes('prestasi')) {
+          this.navigate('berita');
+        } else if (lower.includes('aplikasi') || lower.includes('ppdb')) {
+          const activeApps = state.apps.filter(a => a.is_active !== false);
+          if (activeApps.length > 0) {
+            this.openEmbeddedApp(activeApps[0].id);
+          } else {
+            this.openMobileAppsSheet();
+          }
+        } else if (lower.includes('portal') || lower.includes('login')) {
+          this.navigate('portal');
+        } else {
+          this.navigate('profil');
+        }
+      },
+
+      // Filter & Pencarian Direktori Guru/Tendik dan Berita
+      setStaffFilter(role) {
+        state.staffFilter = role;
+        renderCurrentView();
+      },
+
+      setStaffSearch(query) {
+        state.staffSearch = query;
+        const activeEl = document.activeElement;
+        const selStart = activeEl && typeof activeEl.selectionStart === 'number' ? activeEl.selectionStart : query.length;
+        renderCurrentView();
+        const newInput = document.getElementById('staff-search-input');
+        if (newInput) {
+          newInput.focus();
+          newInput.setSelectionRange(selStart, selStart);
+        }
+      },
+
+      setNewsFilter(cat) {
+        state.newsFilter = cat;
+        renderCurrentView();
+      },
+
+      // Dropdown & Navigasi Aplikasi (Langsung ke Tab Baru)
+      toggleAppsDropdown(event) {
+        event.stopPropagation();
+        const menu = document.getElementById('desktop-apps-menu');
+        const chevron = document.getElementById('desktop-apps-chevron');
+        const isHidden = menu.classList.contains('hidden');
+        if (isHidden) {
+          menu.classList.remove('hidden');
+          chevron?.classList.add('rotate-180');
+        } else {
+          menu.classList.add('hidden');
+          chevron?.classList.remove('rotate-180');
+        }
+      },
+
+      openMobileAppsSheet() {
+        document.getElementById('mobile-apps-sheet')?.classList.remove('hidden');
+        if (window.lucide) window.lucide.createIcons();
+      },
+
+      closeMobileAppsSheet() {
+        document.getElementById('mobile-apps-sheet')?.classList.add('hidden');
+      },
+
+      openEmbeddedApp(appId) {
+        const app = state.apps.find(a => a.id === appId);
+        document.getElementById('desktop-apps-menu')?.classList.add('hidden');
+        document.getElementById('desktop-apps-chevron')?.classList.remove('rotate-180');
+        document.getElementById('mobile-apps-sheet')?.classList.add('hidden');
+        if (app && app.embed_url) {
+          window.open(app.embed_url, '_blank', 'noopener,noreferrer');
+          showToast(`Membuka ${app.app_name} di tab berikutnya...`, 'info');
+        }
+      },
+
+      onAppLinkClick(appName) {
+        document.getElementById('desktop-apps-menu')?.classList.add('hidden');
+        document.getElementById('desktop-apps-chevron')?.classList.remove('rotate-180');
+        document.getElementById('mobile-apps-sheet')?.classList.add('hidden');
+        showToast(`Membuka ${appName} di tab berikutnya...`, 'info');
+      },
+
+      reloadEmbedIframe() {
+        const iframe = document.getElementById('school-app-iframe');
+        if (iframe) {
+          iframe.src = iframe.src;
+          showToast('Memuat ulang aplikasi...', 'info');
+        }
+      },
+
+      toggleEmbedFullscreen() {
+        const wrapper = document.getElementById('embed-frame-wrapper');
+        if (!wrapper) return;
+        if (!document.fullscreenElement) {
+          wrapper.requestFullscreen?.().catch(() => {
+            showToast('Mode layar penuh tidak didukung oleh browser ini.', 'info');
+          });
+        } else {
+          document.exitFullscreen?.();
+        }
+      },
+
+      // News Detail Modal & Galeri Multi-Gambar
+      updateNewsModalGallery() {
+        const imgs = state.activeNewsModalImages;
+        const idx = state.activeNewsModalImgIdx;
+        if (!imgs || imgs.length === 0) return;
+
+        document.getElementById('news-modal-img').src = imgs[idx];
+        const prevBtn = document.getElementById('news-modal-prev');
+        const nextBtn = document.getElementById('news-modal-next');
+        const counterEl = document.getElementById('news-modal-img-counter');
+        const thumbsEl = document.getElementById('news-modal-thumbs');
+
+        if (imgs.length > 1) {
+          prevBtn.classList.remove('hidden');
+          nextBtn.classList.remove('hidden');
+          counterEl.classList.remove('hidden');
+          counterEl.textContent = `${idx + 1} / ${imgs.length}`;
+          thumbsEl.classList.remove('hidden');
+          thumbsEl.innerHTML = imgs.map((src, i) => `
+            <button
+              type="button"
+              onclick="window.appActions.selectNewsModalImage(${i})"
+              class="w-16 h-12 rounded-xl overflow-hidden shrink-0 border-2 transition ${i === idx ? 'border-blue-900 scale-105 shadow-sm' : 'border-transparent opacity-65 hover:opacity-100'}"
+            >
+              <img src="${escapeHtml(src)}" alt="Foto ${i + 1}" class="w-full h-full object-cover" />
+            </button>
+          `).join('');
+        } else {
+          prevBtn.classList.add('hidden');
+          nextBtn.classList.add('hidden');
+          counterEl.classList.add('hidden');
+          thumbsEl.classList.add('hidden');
+          thumbsEl.innerHTML = '';
+        }
+        if (window.lucide) window.lucide.createIcons();
+      },
+
+      selectNewsModalImage(idx) {
+        state.activeNewsModalImgIdx = idx;
+        this.updateNewsModalGallery();
+      },
+
+      prevNewsModalImage() {
+        const len = state.activeNewsModalImages.length;
+        if (len <= 1) return;
+        state.activeNewsModalImgIdx = (state.activeNewsModalImgIdx - 1 + len) % len;
+        this.updateNewsModalGallery();
+      },
+
+      nextNewsModalImage() {
+        const len = state.activeNewsModalImages.length;
+        if (len <= 1) return;
+        state.activeNewsModalImgIdx = (state.activeNewsModalImgIdx + 1) % len;
+        this.updateNewsModalGallery();
+      },
+
+      openNewsModal(newsId) {
+        const item = state.news.find(n => n.id === newsId);
+        if (!item) return;
+        state.activeNewsModalId = item.id;
+        state.activeNewsModalImages = getNewsImagesList(item);
+        state.activeNewsModalImgIdx = 0;
+
+        document.getElementById('news-modal-cat').textContent = item.category || 'Berita';
+        document.getElementById('news-modal-date').textContent = formatDateIndo(item.published_at);
+        document.getElementById('news-modal-title').textContent = item.title;
+        document.getElementById('news-modal-content').textContent = item.content;
+
+        document.getElementById('news-modal-share').innerHTML = `
+          <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Bagikan Berita:</span>
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="window.appActions.shareNews('${item.id}', 'whatsapp')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition">
+              <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+              <span>WhatsApp</span>
+            </button>
+            <button onclick="window.appActions.shareNews('${item.id}', 'facebook')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold transition">
+              <i data-lucide="facebook" class="w-3.5 h-3.5"></i>
+              <span>Facebook</span>
+            </button>
+            <button onclick="window.appActions.shareNews('${item.id}', 'twitter')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition">
+              <i data-lucide="share" class="w-3.5 h-3.5"></i>
+              <span>X</span>
+            </button>
+            <button onclick="window.appActions.shareNews('${item.id}', 'telegram')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white text-xs font-semibold transition">
+              <i data-lucide="send" class="w-3.5 h-3.5"></i>
+              <span>Telegram</span>
+            </button>
+            <button onclick="window.appActions.shareNews('${item.id}', 'copy')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition">
+              <i data-lucide="link" class="w-3.5 h-3.5"></i>
+              <span>Salin Tautan</span>
+            </button>
+          </div>
+        `;
+
+        this.updateNewsModalGallery();
+        document.getElementById('news-detail-modal').classList.remove('hidden');
+        if (window.lucide) window.lucide.createIcons();
+      },
+
+      closeNewsModal() {
+        document.getElementById('news-detail-modal').classList.add('hidden');
+      },
+
+      async shareNews(newsId, platform = 'whatsapp') {
+        const item = state.news.find(n => n.id === newsId);
+        if (!item) return;
+
+        const baseUrl = window.location.href.split('?')[0].split('#')[0];
+        const shareUrl = `${baseUrl}?berita=${encodeURIComponent(item.id)}`;
+        const schoolName = state.profile.school_name || 'Portal Sekolah';
+        const snippet = item.content.length > 120 ? item.content.slice(0, 120) + '...' : item.content;
+        const shareText = `*${item.title}*\n(${item.category} - ${schoolName})\n\n${snippet}\n\nBaca selengkapnya: ${shareUrl}`;
+
+        if (platform === 'whatsapp') {
+          window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank', 'noopener,noreferrer');
+        } else if (platform === 'facebook') {
+          window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank', 'noopener,noreferrer');
+        } else if (platform === 'twitter') {
+          window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`${item.title} - ${schoolName}`)}&url=${encodeURIComponent(shareUrl)}`, '_blank', 'noopener,noreferrer');
+        } else if (platform === 'telegram') {
+          window.open(`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(`${item.title} - ${schoolName}`)}`, '_blank', 'noopener,noreferrer');
+        } else if (platform === 'native' && navigator.share) {
+          try {
+            await navigator.share({
+              title: item.title,
+              text: `${item.title} - ${schoolName}`,
+              url: shareUrl
+            });
+          } catch {
+            // Pengguna membatalkan dialog bagikan bawaan
+          }
+        } else {
+          try {
+            await navigator.clipboard.writeText(shareText);
+            showToast('Teks & tautan berita berhasil disalin!', 'success');
+          } catch {
+            showToast('Tautan siap dibagikan: ' + shareUrl, 'info');
+          }
+        }
+      },
+
+      // Login Modal & Hybrid Authentication
+      openLoginModal(defaultTab = 'warga') {
+        document.getElementById('login-modal').classList.remove('hidden');
+        this.switchLoginTab(defaultTab);
+        if (window.lucide) window.lucide.createIcons();
+      },
+      closeLoginModal() {
+        document.getElementById('login-modal').classList.add('hidden');
+      },
+      switchLoginTab(tab) {
+        const tabWarga = document.getElementById('tab-login-warga');
+        const tabAdmin = document.getElementById('tab-login-admin');
+        const formWarga = document.getElementById('form-login-warga');
+        const formAdmin = document.getElementById('form-login-admin');
+
+        if (tab === 'admin') {
+          tabAdmin.className = 'py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold bg-white text-blue-900 shadow-sm transition';
+          tabWarga.className = 'py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition';
+          formAdmin.classList.remove('hidden');
+          formWarga.classList.add('hidden');
+        } else {
+          tabWarga.className = 'py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold bg-white text-blue-900 shadow-sm transition';
+          tabAdmin.className = 'py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition';
+          formWarga.classList.remove('hidden');
+          formAdmin.classList.add('hidden');
+        }
+      },
+
+      // Quick Login (Hanya berjalan saat IS_PREVIEW === true)
+      quickLoginAdmin() {
+        if (!IS_PREVIEW) return;
+        state.currentUser = {
+          type: 'admin',
+          data: { email: 'admin@sman1nusantara.sch.id', id: 'preview-admin' }
+        };
+        this.closeLoginModal();
+        showToast('Berhasil masuk sebagai Admin (Mode Preview)', 'success');
+        this.navigate('admin');
+      },
+      quickLoginStaff() {
+        if (!IS_PREVIEW) return;
+        const sampleGuru = state.portalUsers[0];
+        state.currentUser = { type: 'warga', data: sampleGuru };
+        this.closeLoginModal();
+        showToast(`Masuk sebagai ${sampleGuru.full_name}`, 'success');
+        this.navigate('portal');
+      },
+
+      // Login Warga Sekolah (Validasi Tabel portal_users)
+      async handleWargaLogin(event) {
+        event.preventDefault();
+        const username = document.getElementById('warga-username').value.trim();
+        const password = document.getElementById('warga-password').value;
+        const btn = document.getElementById('btn-submit-warga');
+        btn.disabled = true;
+
+        try {
+          if (IS_PREVIEW) {
+            const found = state.portalUsers.find(u => u.username === username && u.password === password);
+            if (!found) throw new Error('Username atau kata sandi tidak sesuai.');
+            state.currentUser = { type: 'warga', data: found };
+          } else {
+            const { data, error } = await supabase
+              .from('portal_users')
+              .select('*')
+              .eq('username', username)
+              .eq('password', password)
+              .maybeSingle();
+
+            if (error) throw error;
+            if (!data) throw new Error('Username atau kata sandi tidak ditemukan.');
+            state.currentUser = { type: 'warga', data };
+            sessionStorage.setItem('sekolah_warga_session', JSON.stringify(data));
+          }
+
+          this.closeLoginModal();
+          showToast(`Selamat datang, ${state.currentUser.data.full_name}!`, 'success');
+          this.navigate('portal');
+        } catch (err) {
+          showToast(err.message || 'Gagal masuk ke Portal Warga.', 'error');
+        } finally {
+          btn.disabled = false;
+        }
+      },
+
+      // Login Admin (Supabase Authentication)
+      async handleAdminLogin(event) {
+        event.preventDefault();
+        const email = document.getElementById('admin-email').value.trim();
+        const password = document.getElementById('admin-password').value;
+        const btn = document.getElementById('btn-submit-admin');
+        btn.disabled = true;
+
+        try {
+          if (IS_PREVIEW) {
+            state.currentUser = { type: 'admin', data: { email, id: 'preview-admin' } };
+          } else {
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) throw error;
+            state.currentUser = {
+              type: 'admin',
+              data: { email: data.user.email, id: data.user.id }
+            };
+            const usersRes = await supabase.from('portal_users').select('*').order('created_at', { ascending: false });
+            if (usersRes.data) state.portalUsers = usersRes.data;
+          }
+
+          this.closeLoginModal();
+          showToast('Berhasil masuk ke Panel Admin!', 'success');
+          this.navigate('admin');
+        } catch (err) {
+          showToast('Login Admin gagal: ' + err.message, 'error');
+        } finally {
+          btn.disabled = false;
+        }
+      },
+
+      async logout() {
+        try {
+          if (!IS_PREVIEW && state.currentUser?.type === 'admin') {
+            await supabase.auth.signOut();
+          }
+          sessionStorage.removeItem('sekolah_warga_session');
+          state.currentUser = null;
+          showToast('Anda telah keluar dari sistem.', 'info');
+          this.navigate('beranda');
+        } catch (err) {
+          showToast('Gagal keluar: ' + err.message, 'error');
+        }
+      },
+
+      // Unggah Foto Profil Guru & Tendik (Mandiri maupun oleh Admin)
+      async handleDirectStaffPhotoUpload(event, staffId) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        try {
+          showToast('Mengompresi & mengunggah foto...', 'info');
+          const compressedDataUrl = await compressImageFile(file, 450, 0.8);
+
+          if (IS_PREVIEW) {
+            const target = state.staff.find(s => s.id === staffId);
+            if (target) target.photo_url = compressedDataUrl;
+          } else {
+            const { error } = await supabase
+              .from('school_staff')
+              .update({ photo_url: compressedDataUrl })
+              .eq('id', staffId);
+            if (error) throw error;
+            const target = state.staff.find(s => s.id === staffId);
+            if (target) target.photo_url = compressedDataUrl;
+          }
+
+          showToast('Foto profil berhasil diperbarui!', 'success');
+          renderCurrentView();
+        } catch (err) {
+          showToast(err.message || 'Gagal mengunggah foto.', 'error');
+        }
+      },
+
+      // Kirim Pesan Aspirasi Warga
+      async handleSendMessage(event) {
+        event.preventDefault();
+        const subject = document.getElementById('msg-subject').value.trim();
+        const message = document.getElementById('msg-body').value.trim();
+        const u = state.currentUser?.data;
+        if (!u) return;
+
+        const payload = {
+          user_id: u.id,
+          sender_name: `${u.full_name} (${u.role})`,
+          subject,
+          message
+        };
+
+        try {
+          if (IS_PREVIEW) {
+            state.messages.unshift({ id: 'm-' + Date.now(), ...payload, created_at: new Date().toISOString() });
+          } else {
+            const { data, error } = await supabase.from('school_messages').insert(payload).select().single();
+            if (error) throw error;
+            if (data) state.messages.unshift(data);
+          }
+
+          event.target.reset();
+          showToast('Aspirasi berhasil dikirim ke sekolah!', 'success');
+        } catch (err) {
+          showToast('Gagal mengirim pesan: ' + err.message, 'error');
+        }
+      },
+
+      // =====================================================================
+      // AKSI PANEL ADMIN (CRUD REAL SUPABASE & PREVIEW)
+      // =====================================================================
+      setAdminTab(tab) {
+        state.adminTab = tab;
+        renderCurrentView();
+      },
+
+      async handleAdminLogoFile(event) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        try {
+          const dataUrl = await compressImageFile(file, 360, 0.85);
+          document.getElementById('prof-logo-url').value = dataUrl;
+          document.getElementById('admin-logo-preview').src = dataUrl;
+          showToast('Logo siap disimpan. Klik tombol Simpan Profil.', 'info');
+        } catch (err) {
+          showToast(err.message, 'error');
+        }
+      },
+
+      async saveSchoolProfile(event) {
+        event.preventDefault();
+        const updates = {
+          id: 1,
+          school_name: document.getElementById('prof-name').value.trim(),
+          tagline: document.getElementById('prof-tagline').value.trim(),
+          logo_url: document.getElementById('prof-logo-url').value.trim() || DEFAULT_LOGO_SVG,
+          phone: document.getElementById('prof-phone').value.trim(),
+          email: document.getElementById('prof-email').value.trim(),
+          address: document.getElementById('prof-address').value.trim(),
+          vision: document.getElementById('prof-vision').value.trim(),
+          mission: document.getElementById('prof-mission').value.trim(),
+          updated_at: new Date().toISOString()
+        };
+
+        try {
+          if (IS_PREVIEW) {
+            state.profile = { ...state.profile, ...updates };
+          } else {
+            const { data, error } = await supabase
+              .from('school_profile')
+              .upsert({ ...state.profile, ...updates })
+              .select()
+              .single();
+            if (error) throw error;
+            if (data) state.profile = data;
+          }
+
+          updateBrandAndChrome();
+          showToast('Profil dan Logo Sekolah berhasil diperbarui!', 'success');
+        } catch (err) {
+          showToast('Gagal menyimpan profil: ' + err.message, 'error');
+        }
+      },
+
+      async handleAdminKsFile(event) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        try {
+          const dataUrl = await compressImageFile(file, 500, 0.82);
+          document.getElementById('ks-photo-url').value = dataUrl;
+          document.getElementById('admin-ks-preview').src = dataUrl;
+          showToast('Foto Kepala Sekolah siap disimpan.', 'info');
+        } catch (err) {
+          showToast(err.message, 'error');
+        }
+      },
+
+      async savePrincipalGreeting(event) {
+        event.preventDefault();
+        const updates = {
+          id: 1,
+          principal_name: document.getElementById('ks-name').value.trim(),
+          principal_photo_url: document.getElementById('ks-photo-url').value.trim() || DEFAULT_AVATAR_SVG,
+          principal_greeting: document.getElementById('ks-greeting').value.trim(),
+          updated_at: new Date().toISOString()
+        };
+
+        try {
+          if (IS_PREVIEW) {
+            state.profile = { ...state.profile, ...updates };
+          } else {
+            const { data, error } = await supabase
+              .from('school_profile')
+              .upsert({ ...state.profile, ...updates })
+              .select()
+              .single();
+            if (error) throw error;
+            if (data) state.profile = data;
+          }
+          showToast('Sambutan Kepala Sekolah berhasil disimpan!', 'success');
+        } catch (err) {
+          showToast('Gagal menyimpan sambutan: ' + err.message, 'error');
+        }
+      },
+
+      async handleSlideImageUpload(event) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        try {
+          const dataUrl = await compressImageFile(file, 1080, 0.78);
+          document.getElementById('slide-img-url').value = dataUrl;
+          showToast('Gambar slide berhasil dikompresi.', 'info');
+        } catch (err) {
+          showToast(err.message, 'error');
+        }
+      },
+
+      async addHeroSlide(event) {
+        event.preventDefault();
+        const newSlide = {
+          title: document.getElementById('slide-title').value.trim(),
+          subtitle: document.getElementById('slide-subtitle').value.trim(),
+          image_url: document.getElementById('slide-img-url').value.trim(),
+          cta_text: document.getElementById('slide-cta').value.trim(),
+          sort_order: parseInt(document.getElementById('slide-order').value || '1', 10),
+          is_active: true
+        };
+
+        try {
+          if (IS_PREVIEW) {
+            state.slides.push({ id: 's-' + Date.now(), ...newSlide });
+            state.slides.sort((a, b) => a.sort_order - b.sort_order);
+          } else {
+            const { data, error } = await supabase.from('hero_slides').insert(newSlide).select().single();
+            if (error) throw error;
+            if (data) {
+              state.slides.push(data);
+              state.slides.sort((a, b) => a.sort_order - b.sort_order);
+            }
+          }
+          showToast('Slide baru berhasil ditambahkan!', 'success');
+          renderCurrentView();
+        } catch (err) {
+          showToast('Gagal menambah slide: ' + err.message, 'error');
+        }
+      },
+
+      async deleteHeroSlide(id) {
+        const ok = await showConfirmDialog('Hapus Gambar Slide', 'Slide ini akan dihapus dari halaman Beranda. Lanjutkan?');
+        if (!ok) return;
+        try {
+          if (!IS_PREVIEW) {
+            const { error } = await supabase.from('hero_slides').delete().eq('id', id);
+            if (error) throw error;
+          }
+          state.slides = state.slides.filter(s => s.id !== id);
+          showToast('Slide berhasil dihapus.', 'info');
+          renderCurrentView();
+        } catch (err) {
+          showToast('Gagal menghapus slide: ' + err.message, 'error');
+        }
+      },
+
+      async handleNewStaffPhotoUpload(event) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        try {
+          const dataUrl = await compressImageFile(file, 450, 0.8);
+          document.getElementById('staff-photo-url').value = dataUrl;
+          showToast('Foto siap disimpan.', 'info');
+        } catch (err) {
+          showToast(err.message, 'error');
+        }
+      },
+
+      async addSchoolStaff(event) {
+        event.preventDefault();
+        const payload = {
+          full_name: document.getElementById('staff-fullname').value.trim(),
+          role_type: document.getElementById('staff-roletype').value,
+          position_subject: document.getElementById('staff-position').value.trim(),
+          nip: document.getElementById('staff-nip').value.trim(),
+          photo_url: document.getElementById('staff-photo-url').value.trim() || DEFAULT_AVATAR_SVG,
+          sort_order: state.staff.length + 1
+        };
+
+        try {
+          if (IS_PREVIEW) {
+            state.staff.push({ id: 'st-' + Date.now(), ...payload });
+          } else {
+            const { data, error } = await supabase.from('school_staff').insert(payload).select().single();
+            if (error) throw error;
+            if (data) state.staff.push(data);
+          }
+          showToast('Data Guru / Tendik berhasil ditambahkan!', 'success');
+          renderCurrentView();
+        } catch (err) {
+          showToast('Gagal menambah data: ' + err.message, 'error');
+        }
+      },
+
+      async deleteSchoolStaff(id) {
+        const ok = await showConfirmDialog('Hapus Guru / Tendik', 'Data ini akan dihapus dari direktori sekolah.');
+        if (!ok) return;
+        try {
+          if (!IS_PREVIEW) {
+            const { error } = await supabase.from('school_staff').delete().eq('id', id);
+            if (error) throw error;
+          }
+          state.staff = state.staff.filter(s => s.id !== id);
+          showToast('Data dihapus.', 'info');
+          renderCurrentView();
+        } catch (err) {
+          showToast('Gagal menghapus: ' + err.message, 'error');
+        }
+      },
+
+      async addSchoolApp(event) {
+        event.preventDefault();
+        const payload = {
+          app_name: document.getElementById('app-name').value.trim(),
+          embed_url: document.getElementById('app-url').value.trim(),
+          description: document.getElementById('app-desc').value.trim(),
+          icon_name: document.getElementById('app-icon').value,
+          sort_order: state.apps.length + 1,
+          is_active: true
+        };
+
+        try {
+          if (IS_PREVIEW) {
+            state.apps.push({ id: 'app-' + Date.now(), ...payload });
+          } else {
+            const { data, error } = await supabase.from('school_apps').insert(payload).select().single();
+            if (error) throw error;
+            if (data) state.apps.push(data);
+          }
+          updateBrandAndChrome();
+          showToast('Aplikasi berhasil ditambahkan ke menu dropdown!', 'success');
+          renderCurrentView();
+        } catch (err) {
+          showToast('Gagal menambah aplikasi: ' + err.message, 'error');
+        }
+      },
+
+      async deleteSchoolApp(id) {
+        const ok = await showConfirmDialog('Hapus Aplikasi', 'Aplikasi ini akan dihapus dari daftar dropdown menu.');
+        if (!ok) return;
+        try {
+          if (!IS_PREVIEW) {
+            const { error } = await supabase.from('school_apps').delete().eq('id', id);
+            if (error) throw error;
+          }
+          state.apps = state.apps.filter(a => a.id !== id);
+          updateBrandAndChrome();
+          showToast('Aplikasi dihapus.', 'info');
+          renderCurrentView();
+        } catch (err) {
+          showToast('Gagal menghapus aplikasi: ' + err.message, 'error');
+        }
+      },
+
+      async handleNewsImagesUpload(event) {
+        const files = Array.from(event.target.files || []);
+        if (files.length === 0) return;
+        try {
+          showToast(`Memproses ${files.length} gambar...`, 'info');
+          for (const file of files) {
+            const dataUrl = await compressImageFile(file, 900, 0.78);
+            state.newsDraftImages.push(dataUrl);
+          }
+          event.target.value = '';
+          showToast(`${files.length} gambar ditambahkan ke galeri berita.`, 'success');
+          renderCurrentView();
+        } catch (err) {
+          showToast(err.message, 'error');
+        }
+      },
+
+      addNewsDraftImageUrl() {
+        const input = document.getElementById('news-extra-url');
+        const url = input?.value.trim();
+        if (!url) return;
+        state.newsDraftImages.push(url);
+        input.value = '';
+        renderCurrentView();
+      },
+
+      removeNewsDraftImage(index) {
+        state.newsDraftImages.splice(index, 1);
+        renderCurrentView();
+      },
+
+      async addSchoolNews(event) {
+        event.preventDefault();
+        const title = document.getElementById('news-title').value.trim();
+        const images = state.newsDraftImages.length > 0
+          ? [...state.newsDraftImages]
+          : [generateBannerSvg(title, '#1E3A8A', '#3B82F6')];
+
+        const payload = {
+          title,
+          category: document.getElementById('news-cat').value,
+          image_url: images[0],
+          images,
+          content: document.getElementById('news-content').value.trim(),
+          published_at: new Date().toISOString()
+        };
+
+        try {
+          if (IS_PREVIEW) {
+            state.news.unshift({ id: 'n-' + Date.now(), ...payload });
+          } else {
+            const { data, error } = await supabase.from('school_news').insert(payload).select().single();
+            if (error) throw error;
+            if (data) state.news.unshift(data);
+          }
+          state.newsDraftImages = [];
+          showToast('Berita beserta galeri gambar berhasil diterbitkan!', 'success');
+          renderCurrentView();
+        } catch (err) {
+          showToast('Gagal menerbitkan berita: ' + err.message, 'error');
+        }
+      },
+
+      async deleteSchoolNews(id) {
+        const ok = await showConfirmDialog('Hapus Berita', 'Artikel berita ini akan dihapus permanen.');
+        if (!ok) return;
+        try {
+          if (!IS_PREVIEW) {
+            const { error } = await supabase.from('school_news').delete().eq('id', id);
+            if (error) throw error;
+          }
+          state.news = state.news.filter(n => n.id !== id);
+          showToast('Berita dihapus.', 'info');
+          renderCurrentView();
+        } catch (err) {
+          showToast('Gagal menghapus berita: ' + err.message, 'error');
+        }
+      },
+
+      async addPortalUser(event) {
+        event.preventDefault();
+        const staffLinkVal = document.getElementById('pu-staff-link').value;
+        const payload = {
+          full_name: document.getElementById('pu-fullname').value.trim(),
+          username: document.getElementById('pu-username').value.trim(),
+          password: document.getElementById('pu-password').value,
+          role: document.getElementById('pu-role').value,
+          class_info: document.getElementById('pu-class').value.trim(),
+          staff_id: staffLinkVal ? staffLinkVal : null
+        };
+
+        try {
+          if (IS_PREVIEW) {
+            state.portalUsers.unshift({ id: 'u-' + Date.now(), ...payload });
+          } else {
+            const { data, error } = await supabase.from('portal_users').insert(payload).select().single();
+            if (error) throw error;
+            if (data) state.portalUsers.unshift(data);
+          }
+          showToast('Akun warga sekolah berhasil dibuat!', 'success');
+          renderCurrentView();
+        } catch (err) {
+          showToast('Gagal membuat akun: ' + err.message, 'error');
+        }
+      },
+
+      async deletePortalUser(id) {
+        const ok = await showConfirmDialog('Hapus Akun Warga', 'Pengguna ini tidak akan bisa login lagi.');
+        if (!ok) return;
+        try {
+          if (!IS_PREVIEW) {
+            const { error } = await supabase.from('portal_users').delete().eq('id', id);
+            if (error) throw error;
+          }
+          state.portalUsers = state.portalUsers.filter(u => u.id !== id);
+          showToast('Akun dihapus.', 'info');
+          renderCurrentView();
+        } catch (err) {
+          showToast('Gagal menghapus akun: ' + err.message, 'error');
+        }
+      }
+    };
+
+    // Tutup dropdown desktop jika klik di luar area
+    document.addEventListener('click', (e) => {
+      const wrapper = document.getElementById('desktop-apps-dropdown-wrapper');
+      const menu = document.getElementById('desktop-apps-menu');
+      const chevron = document.getElementById('desktop-apps-chevron');
+      if (wrapper && menu && !wrapper.contains(e.target)) {
+        menu.classList.add('hidden');
+        chevron?.classList.remove('rotate-180');
+      }
+    });
+
+    // Inisialisasi Aplikasi
+    (async function initApp() {
+      updateBrandAndChrome();
+      if (IS_PREVIEW) {
+        state.isLoading = false;
+        renderCurrentView();
+      } else {
+        await loadAllDataFromSupabase();
+      }
+      const sharedNewsId = new URLSearchParams(window.location.search).get('berita');
+      if (sharedNewsId && state.news.some(n => n.id === sharedNewsId)) {
+        window.appActions.openNewsModal(sharedNewsId);
+      }
+    })();
+  </script>
+</body>
+</html>
