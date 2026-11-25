@@ -469,9 +469,9 @@
     // KONFIGURASI DEPLOYMENT SUPABASE
     // Ubah IS_PREVIEW menjadi false saat siap dipublikasikan ke produksi
     // =========================================================================
-    const IS_PREVIEW = true;
-    const SUPABASE_URL = "URL_SUPABASE_ANDA";
-    const SUPABASE_ANON_KEY = "ANON_KEY_ANDA";
+    const IS_PREVIEW = false;
+    const SUPABASE_URL = "https://boqonyoovkessmcdsohr.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJvcW9ueW9vdmtlc3NtY2Rzb2hyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTU1OTg3MjksImV4cCI6MjExMTE3NDcyOX0.4TYNjB9kkvwGgtb_12LUVOjUK49BuovoFjSYuIxhyCM";
 
     // Inisialisasi Client Supabase hanya saat IS_PREVIEW === false
     const supabase = !IS_PREVIEW ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
